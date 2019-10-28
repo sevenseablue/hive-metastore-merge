@@ -15,7 +15,7 @@ public class Tbls {
     private String tbl_type;
     private String view_expanded_text;
     private String view_original_text;
-    private Long link_target_id;
+    private Boolean is_rewrite_enabled;
 
     public void Tbls() {
     }
@@ -108,12 +108,12 @@ public class Tbls {
         return view_original_text;
     }
 
-    public void setLinkTargetId(Long linkTargetId_) {
-        link_target_id = linkTargetId_;
+    public void setIsRewriteEnabled(Boolean isRewriteEnabled_) {
+        is_rewrite_enabled = isRewriteEnabled_;
     }
 
-    public Long getLinkTargetId() {
-        return link_target_id;
+    public Boolean getIsRewriteEnabled() {
+        return is_rewrite_enabled;
     }
 
 }

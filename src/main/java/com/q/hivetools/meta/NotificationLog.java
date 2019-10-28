@@ -11,6 +11,7 @@ public class NotificationLog {
     private String db_name;
     private String tbl_name;
     private String message;
+    private String message_format;
 
     public void NotificationLog() {
     }
@@ -69,6 +70,14 @@ public class NotificationLog {
 
     public String getMessage() {
         return message;
+    }
+
+    public void setMessageFormat(String messageFormat_) {
+        message_format = messageFormat_;
+    }
+
+    public String getMessageFormat() {
+        return message_format;
     }
 
 }

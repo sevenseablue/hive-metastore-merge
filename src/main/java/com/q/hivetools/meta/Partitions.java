@@ -10,7 +10,6 @@ public class Partitions {
     private String part_name;
     private Long sd_id;
     private Long tbl_id;
-    private Long link_target_id;
 
     public void Partitions() {
     }
@@ -61,14 +60,6 @@ public class Partitions {
 
     public Long getTblId() {
         return tbl_id;
-    }
-
-    public void setLinkTargetId(Long linkTargetId_) {
-        link_target_id = linkTargetId_;
-    }
-
-    public Long getLinkTargetId() {
-        return link_target_id;
     }
 
 }
