@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
         'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
 
-<mapper namespace='com.netease.hivetools.mappers.MetaDataMapper'>
+<mapper namespace='com.q.hivetools.mappers.MetaDataMapper'>
     <!--CDS-->
-    <select id='getCdsRecords' resultType='com.netease.hivetools.meta.Cds'>
+    <select id='getCdsRecords' resultType='com.q.hivetools.meta.Cds'>
         <![CDATA[
             SELECT * FROM CDS ORDER BY CD_ID
         ]]>
@@ -30,7 +30,7 @@
     </delete>
 
     <!--DBS-->
-    <select id='getDbsRecords' parameterType="java.util.Map" resultType='com.netease.hivetools.meta.Dbs'>
+    <select id='getDbsRecords' parameterType="java.util.Map" resultType='com.q.hivetools.meta.Dbs'>
         SELECT * FROM DBS WHERE 1=1 AND NAME like '${database_name}'
     </select>
     <select id="getDbsMaxId" resultType="int">
@@ -50,13 +50,13 @@
             #{item.name}, #{item.owner_name}, #{item.owner_type})
         </foreach>
     </insert>
-    <select id="checkUniqueKeyDbs" parameterType="java.util.Map" resultType='com.netease.hivetools.meta.Dbs'>
+    <select id="checkUniqueKeyDbs" parameterType="java.util.Map" resultType='com.q.hivetools.meta.Dbs'>
         SELECT `NAME` FROM DBS WHERE `NAME` IN
         <foreach collection="list" item="item"  open="(" separator="," close=")">
             #{item.name}
         </foreach>
     </select>
-    <delete id="deleteDbs" parameterType="com.netease.hivetools.meta.Dbs">
+    <delete id="deleteDbs" parameterType="com.q.hivetools.meta.Dbs">
         DELETE FROM FUNC_RU WHERE FUNC_ID IN (SELECT FUNC_ID FROM FUNCS WHERE DB_ID = #{db_id});
         DELETE FROM FUNCS WHERE DB_ID = #{db_id};
         DELETE FROM DATABASE_PARAMS WHERE DB_ID = #{db_id};
@@ -68,7 +68,7 @@
     </delete>
 
     <!--DELEGATION_TOKENS-->
-    <select id='getDelegationTokensRecords' resultType='com.netease.hivetools.meta.DelegationTokens'>
+    <select id='getDelegationTokensRecords' resultType='com.q.hivetools.meta.DelegationTokens'>
         <![CDATA[
             SELECT * FROM 1
         ]]>
@@ -94,7 +94,7 @@
     </delete>
 
     <!--compaction_queue-->
-    <select id='getCompactionQueueRecords' resultType='com.netease.hivetools.meta.CompactionQueue'>
+    <select id='getCompactionQueueRecords' resultType='com.q.hivetools.meta.CompactionQueue'>
         <![CDATA[
             SELECT * FROM COMPACTION_QUEUE ORDER BY CQ_ID
         ]]>
@@ -120,7 +120,7 @@
     </delete>
 
     <!--COMPLETED_TXN_COMPONENTS-->
-    <select id='getCompletedTxnComponentsRecords' resultType='com.netease.hivetools.meta.CompletedTxnComponents'>
+    <select id='getCompletedTxnComponentsRecords' resultType='com.q.hivetools.meta.CompletedTxnComponents'>
         <![CDATA[
             SELECT * FROM COMPLETED_TXN_COMPONENTS ORDER BY CTC_TXNID
         ]]>
@@ -146,7 +146,7 @@
     </delete>
 
     <!--GLOBAL_PRIVS-->
-    <select id='getGlobalPrivsRecords' resultType='com.netease.hivetools.meta.GlobalPrivs'>
+    <select id='getGlobalPrivsRecords' resultType='com.q.hivetools.meta.GlobalPrivs'>
         <![CDATA[
             SELECT * FROM GLOBAL_PRIVS ORDER BY USER_GRANT_ID
         ]]>
@@ -172,7 +172,7 @@
     </delete>
 
     <!--NEXT_TXN_ID-->
-    <select id='getNextTxnIdRecords' resultType='com.netease.hivetools.meta.NextTxnId'>
+    <select id='getNextTxnIdRecords' resultType='com.q.hivetools.meta.NextTxnId'>
         <![CDATA[
             SELECT * FROM NEXT_TXN_ID ORDER BY NTXN_NEXT
         ]]>
@@ -198,7 +198,7 @@
     </delete>
 
     <!--NEXT_LOCK_ID-->
-    <select id='getNextLockIdRecords' resultType='com.netease.hivetools.meta.NextLockId'>
+    <select id='getNextLockIdRecords' resultType='com.q.hivetools.meta.NextLockId'>
         <![CDATA[
             SELECT * FROM NEXT_LOCK_ID ORDER BY NL_NEXT
         ]]>
@@ -224,7 +224,7 @@
     </delete>
 
     <!--NEXT_COMPACTION_QUEUE_ID-->
-    <select id='getNextCompactionQueueIdRecords' resultType='com.netease.hivetools.meta.NextCompactionQueueId'>
+    <select id='getNextCompactionQueueIdRecords' resultType='com.q.hivetools.meta.NextCompactionQueueId'>
         <![CDATA[
             SELECT * FROM NEXT_COMPACTION_QUEUE_ID ORDER BY NCQ_NEXT
         ]]>
@@ -250,7 +250,7 @@
     </delete>
 
     <!--HIVE_LOCKS-->
-    <select id='getHiveLocksRecords' resultType='com.netease.hivetools.meta.HiveLocks'>
+    <select id='getHiveLocksRecords' resultType='com.q.hivetools.meta.HiveLocks'>
         <![CDATA[
             SELECT * FROM HIVE_LOCKS ORDER BY HL_LOCK_EXT_ID
         ]]>
@@ -276,7 +276,7 @@
     </delete>
 
     <!--MASTER_KEYS-->
-    <select id='getMasterKeysRecords' resultType='com.netease.hivetools.meta.MasterKeys'>
+    <select id='getMasterKeysRecords' resultType='com.q.hivetools.meta.MasterKeys'>
         <![CDATA[
             SELECT * FROM MASTER_KEYS ORDER BY KEY_ID
         ]]>
@@ -302,7 +302,7 @@
     </delete>
 
     <!--NOTIFICATION_LOG-->
-    <select id='getNotificationLogRecords' resultType='com.netease.hivetools.meta.NotificationLog'>
+    <select id='getNotificationLogRecords' resultType='com.q.hivetools.meta.NotificationLog'>
         <![CDATA[
             SELECT * FROM NOTIFICATION_LOG ORDER BY NL_ID
         ]]>
@@ -328,7 +328,7 @@
     </delete>
 
     <!--NOTIFICATION_SEQUENCE-->
-    <select id='getNotificationSequenceRecords' resultType='com.netease.hivetools.meta.NotificationSequence'>
+    <select id='getNotificationSequenceRecords' resultType='com.q.hivetools.meta.NotificationSequence'>
         <![CDATA[
             SELECT * FROM NOTIFICATION_SEQUENCE ORDER BY NNI_ID
         ]]>
@@ -354,7 +354,7 @@
     </delete>
 
     <!--NUCLEUS_TABLES-->
-    <select id='getNucleusTablesRecords' resultType='com.netease.hivetools.meta.NucleusTables'>
+    <select id='getNucleusTablesRecords' resultType='com.q.hivetools.meta.NucleusTables'>
         <![CDATA[
             SELECT * FROM NUCLEUS_TABLES ORDER BY CLASS_NAME
         ]]>
@@ -380,12 +380,12 @@
     </delete>
 
     <!--PARTITIONS-->
-    <select id='getPartitionsRecords' resultType='com.netease.hivetools.meta.Partitions'>
+    <select id='getPartitionsRecords' resultType='com.q.hivetools.meta.Partitions'>
         <![CDATA[
             SELECT * FROM PARTITIONS ORDER BY PART_ID
         ]]>
     </select>
-    <select id='getPagingPartitionsRecords' parameterType="java.util.Map" resultType='com.netease.hivetools.meta.Partitions'>
+    <select id='getPagingPartitionsRecords' parameterType="java.util.Map" resultType='com.q.hivetools.meta.Partitions'>
         <![CDATA[
             SELECT * FROM PARTITIONS WHERE PART_ID >= ${mapPagindId.startId} AND PART_ID < ${mapPagindId.endId}
         ]]>
@@ -413,7 +413,7 @@
     </delete>
 
     <!--PARTITION_EVENTS-->
-    <select id='getPartitionEventsRecords' resultType='com.netease.hivetools.meta.PartitionEvents'>
+    <select id='getPartitionEventsRecords' resultType='com.q.hivetools.meta.PartitionEvents'>
         <![CDATA[
             SELECT * FROM PARTITION_EVENTS ORDER BY PART_NAME_ID
         ]]>
@@ -439,7 +439,7 @@
     </delete>
 
     <!--PARTITION_KEYS-->
-    <select id='getPartitionKeysRecords' resultType='com.netease.hivetools.meta.PartitionKeys'>
+    <select id='getPartitionKeysRecords' resultType='com.q.hivetools.meta.PartitionKeys'>
         <![CDATA[
             SELECT * FROM PARTITION_KEYS ORDER BY TBL_ID, PKEY_NAME
         ]]>
@@ -465,12 +465,12 @@
     </delete>
 
     <!--PARTITION_KEY_VALS-->
-    <select id='getPartitionKeyValsRecords' resultType='com.netease.hivetools.meta.PartitionKeyVals'>
+    <select id='getPartitionKeyValsRecords' resultType='com.q.hivetools.meta.PartitionKeyVals'>
         <![CDATA[
             SELECT * FROM PARTITION_KEY_VALS ORDER BY PART_ID, INTEGER_IDX
         ]]>
     </select>
-    <select id='getPagingPartitionKeyValsRecords' parameterType="java.util.Map" resultType='com.netease.hivetools.meta.PartitionKeyVals'>
+    <select id='getPagingPartitionKeyValsRecords' parameterType="java.util.Map" resultType='com.q.hivetools.meta.PartitionKeyVals'>
         <![CDATA[
             SELECT * FROM PARTITION_KEY_VALS WHERE PART_ID >= ${mapPagindId.startId} AND PART_ID < ${mapPagindId.endId}
         ]]>
@@ -496,12 +496,12 @@
     </delete>
 
     <!--PARTITION_PARAMS-->
-    <select id='getPartitionParamsRecords' resultType='com.netease.hivetools.meta.PartitionParams'>
+    <select id='getPartitionParamsRecords' resultType='com.q.hivetools.meta.PartitionParams'>
         <![CDATA[
             SELECT * FROM PARTITION_PARAMS ORDER BY PART_ID, PARAM_KEY
         ]]>
     </select>
-    <select id='getPagingPartitionParamsRecords' parameterType="java.util.Map" resultType='com.netease.hivetools.meta.PartitionParams'>
+    <select id='getPagingPartitionParamsRecords' parameterType="java.util.Map" resultType='com.q.hivetools.meta.PartitionParams'>
         <![CDATA[
             SELECT * FROM PARTITION_PARAMS WHERE PART_ID >= ${mapPagindId.startId} AND PART_ID < ${mapPagindId.endId}
         ]]>
@@ -527,7 +527,7 @@
     </delete>
 
     <!--PART_COL_PRIVS-->
-    <select id='getPartColPrivsRecords' resultType='com.netease.hivetools.meta.PartColPrivs'>
+    <select id='getPartColPrivsRecords' resultType='com.q.hivetools.meta.PartColPrivs'>
         <![CDATA[
             SELECT * FROM PART_COL_PRIVS ORDER BY PART_COLUMN_GRANT_ID
         ]]>
@@ -557,7 +557,7 @@
     </delete>
 
     <!--PART_COL_STATS-->
-    <select id='getPartColStatsRecords' resultType='com.netease.hivetools.meta.PartColStats'>
+    <select id='getPartColStatsRecords' resultType='com.q.hivetools.meta.PartColStats'>
         <![CDATA[
             SELECT * FROM PART_COL_STATS ORDER BY CS_ID
         ]]>
@@ -589,7 +589,7 @@
     </delete>
 
     <!--PART_PRIVS-->
-    <select id='getPartPrivsRecords' resultType='com.netease.hivetools.meta.PartPrivs'>
+    <select id='getPartPrivsRecords' resultType='com.q.hivetools.meta.PartPrivs'>
         <![CDATA[
             SELECT * FROM PART_PRIVS ORDER BY PART_GRANT_ID
         ]]>
@@ -617,7 +617,7 @@
     </delete>
 
     <!--ROLES-->
-    <select id='getRolesRecords' resultType='com.netease.hivetools.meta.Roles'>
+    <select id='getRolesRecords' resultType='com.q.hivetools.meta.Roles'>
         <![CDATA[
             SELECT * FROM ROLES ORDER BY ROLE_ID
         ]]>
@@ -641,7 +641,7 @@
             (${mapPlusId.ROLES} + #{item.role_id}, #{item.create_time}, #{item.owner_name}, CONCAT(#{item.role_name},'_','${mapPlusId.sourceName}'))
         </foreach>
     </insert>
-    <select id="checkUniqueKeyRoles" parameterType="java.util.Map" resultType='com.netease.hivetools.meta.Roles'>
+    <select id="checkUniqueKeyRoles" parameterType="java.util.Map" resultType='com.q.hivetools.meta.Roles'>
         SELECT `ROLE_NAME` FROM ROLES WHERE `ROLE_NAME` IN
         <foreach collection="list" item="item"  open="(" separator="," close=")">
             #{item.role_name}
@@ -652,7 +652,7 @@
     </delete>
 
     <!--ROLE_MAP-->
-    <select id='getRoleMapRecords' resultType='com.netease.hivetools.meta.RoleMap'>
+    <select id='getRoleMapRecords' resultType='com.q.hivetools.meta.RoleMap'>
         <![CDATA[
             SELECT * FROM ROLE_MAP ORDER BY ROLE_GRANT_ID
         ]]>
@@ -680,12 +680,12 @@
     </delete>
 
     <!--SDS-->
-    <select id='getSdsRecords' resultType='com.netease.hivetools.meta.Sds'>
+    <select id='getSdsRecords' resultType='com.q.hivetools.meta.Sds'>
         <![CDATA[
             SELECT * FROM SDS ORDER BY SD_ID
         ]]>
     </select>
-    <select id='getPagingSdsRecords' parameterType="java.util.Map" resultType='com.netease.hivetools.meta.Sds'>
+    <select id='getPagingSdsRecords' parameterType="java.util.Map" resultType='com.q.hivetools.meta.Sds'>
         <![CDATA[
             SELECT * FROM SDS WHERE SD_ID >= ${mapPagindId.startId} AND SD_ID < ${mapPagindId.endId}
         ]]>
@@ -713,7 +713,7 @@
     </delete>
 
     <!--SD_PARAMS-->
-    <select id='getSdParamsRecords' resultType='com.netease.hivetools.meta.SdParams'>
+    <select id='getSdParamsRecords' resultType='com.q.hivetools.meta.SdParams'>
         <![CDATA[
             SELECT * FROM SD_PARAMS ORDER BY SD_ID
         ]]>
@@ -739,7 +739,7 @@
     </delete>
 
     <!--SEQUENCE_TABLE-->
-    <select id='getSequenceTableRecords' resultType='com.netease.hivetools.meta.SequenceTable'>
+    <select id='getSequenceTableRecords' resultType='com.q.hivetools.meta.SequenceTable'>
         <![CDATA[
             SELECT * FROM SEQUENCE_TABLE ORDER BY SEQUENCE_NAME
         ]]>
@@ -779,12 +779,12 @@
     </delete>
 
     <!--SERDES-->
-    <select id='getSerdesRecords' resultType='com.netease.hivetools.meta.Serdes'>
+    <select id='getSerdesRecords' resultType='com.q.hivetools.meta.Serdes'>
         <![CDATA[
             SELECT * FROM SERDES ORDER BY SERDE_ID
         ]]>
     </select>
-    <select id='getPagingSerdesRecords' parameterType="java.util.Map" resultType='com.netease.hivetools.meta.Serdes'>
+    <select id='getPagingSerdesRecords' parameterType="java.util.Map" resultType='com.q.hivetools.meta.Serdes'>
         <![CDATA[
             SELECT * FROM SERDES WHERE SERDE_ID >= ${mapPagindId.startId} AND SERDE_ID < ${mapPagindId.endId}
         ]]>
@@ -810,12 +810,12 @@
     </delete>
 
     <!--SERDE_PARAMS-->
-    <select id='getSerdeParamsRecords' resultType='com.netease.hivetools.meta.SerdeParams'>
+    <select id='getSerdeParamsRecords' resultType='com.q.hivetools.meta.SerdeParams'>
         <![CDATA[
             SELECT * FROM SERDE_PARAMS ORDER BY SERDE_ID
         ]]>
     </select>
-    <select id='getPagingSerdeParamsRecords' parameterType="java.util.Map" resultType='com.netease.hivetools.meta.SerdeParams'>
+    <select id='getPagingSerdeParamsRecords' parameterType="java.util.Map" resultType='com.q.hivetools.meta.SerdeParams'>
         <![CDATA[
             SELECT * FROM SERDE_PARAMS WHERE SERDE_ID >= ${mapPagindId.startId} AND SERDE_ID < ${mapPagindId.endId}
         ]]>
@@ -841,7 +841,7 @@
     </delete>
 
     <!--SKEWED_COL_NAMES-->
-    <select id='getSkewedColNamesRecords' resultType='com.netease.hivetools.meta.SkewedColNames'>
+    <select id='getSkewedColNamesRecords' resultType='com.q.hivetools.meta.SkewedColNames'>
         <![CDATA[
             SELECT * FROM SKEWED_COL_NAMES ORDER BY SD_ID, INTEGER_IDX
         ]]>
@@ -867,7 +867,7 @@
     </delete>
 
     <!--SKEWED_COL_VALUE_LOC_MAP-->
-    <select id='getSkewedColValueLocMapRecords' resultType='com.netease.hivetools.meta.SkewedColValueLocMap'>
+    <select id='getSkewedColValueLocMapRecords' resultType='com.q.hivetools.meta.SkewedColValueLocMap'>
         <![CDATA[
             SELECT * FROM SKEWED_COL_VALUE_LOC_MAP ORDER BY SD_ID
         ]]>
@@ -893,7 +893,7 @@
     </delete>
 
     <!--FUNCS-->
-    <select id='getFuncsRecords' resultType='com.netease.hivetools.meta.Funcs'>
+    <select id='getFuncsRecords' resultType='com.q.hivetools.meta.Funcs'>
         <![CDATA[
             SELECT * FROM FUNCS ORDER BY FUNC_ID
         ]]>
@@ -921,7 +921,7 @@
     </delete>
 
     <!--FUNC_RU-->
-    <select id='getFuncRuRecords' resultType='com.netease.hivetools.meta.FuncRu'>
+    <select id='getFuncRuRecords' resultType='com.q.hivetools.meta.FuncRu'>
         <![CDATA[
             SELECT * FROM FUNC_RU ORDER BY FUNC_ID
         ]]>
@@ -947,7 +947,7 @@
     </delete>
 
     <!--IDXS-->
-    <select id='getIdxsRecords' resultType='com.netease.hivetools.meta.Idxs'>
+    <select id='getIdxsRecords' resultType='com.q.hivetools.meta.Idxs'>
         <![CDATA[
             SELECT * FROM IDXS ORDER BY INDEX_ID
         ]]>
@@ -975,7 +975,7 @@
     </delete>
 
     <!--INDEX_PARAMS-->
-    <select id='getIndexParamsRecords' resultType='com.netease.hivetools.meta.IndexParams'>
+    <select id='getIndexParamsRecords' resultType='com.q.hivetools.meta.IndexParams'>
         <![CDATA[
             SELECT * FROM INDEX_PARAMS ORDER BY INDEX_ID
         ]]>
@@ -1001,7 +1001,7 @@
     </delete>
 
     <!--SKEWED_STRING_LIST-->
-    <select id='getSkewedStringListRecords' resultType='com.netease.hivetools.meta.SkewedStringList'>
+    <select id='getSkewedStringListRecords' resultType='com.q.hivetools.meta.SkewedStringList'>
         <![CDATA[
             SELECT * FROM SKEWED_STRING_LIST ORDER BY STRING_LIST_ID
         ]]>
@@ -1027,7 +1027,7 @@
     </delete>
 
     <!--SKEWED_STRING_LIST_VALUES-->
-    <select id='getSkewedStringListValuesRecords' resultType='com.netease.hivetools.meta.SkewedStringListValues'>
+    <select id='getSkewedStringListValuesRecords' resultType='com.q.hivetools.meta.SkewedStringListValues'>
         <![CDATA[
             SELECT * FROM SKEWED_STRING_LIST_VALUES ORDER BY STRING_LIST_ID, INTEGER_IDX
         ]]>
@@ -1053,7 +1053,7 @@
     </delete>
 
     <!--SKEWED_VALUES-->
-    <select id='getSkewedValuesRecords' resultType='com.netease.hivetools.meta.SkewedValues'>
+    <select id='getSkewedValuesRecords' resultType='com.q.hivetools.meta.SkewedValues'>
         <![CDATA[
             SELECT * FROM SKEWED_VALUES ORDER BY SD_ID_OID, INTEGER_IDX
         ]]>
@@ -1079,7 +1079,7 @@
     </delete>
 
     <!--SORT_COLS-->
-    <select id='getSortColsRecords' resultType='com.netease.hivetools.meta.SortCols'>
+    <select id='getSortColsRecords' resultType='com.q.hivetools.meta.SortCols'>
         <![CDATA[
             SELECT * FROM SORT_COLS ORDER BY SD_ID, INTEGER_IDX
         ]]>
@@ -1105,7 +1105,7 @@
     </delete>
 
     <!--TABLE_PARAMS-->
-    <select id='getTableParamsRecords' resultType='com.netease.hivetools.meta.TableParams'>
+    <select id='getTableParamsRecords' resultType='com.q.hivetools.meta.TableParams'>
         <![CDATA[
             SELECT * FROM TABLE_PARAMS ORDER BY TBL_ID
         ]]>
@@ -1131,7 +1131,7 @@
     </delete>
 
     <!--TAB_COL_STATS-->
-    <select id='getTabColStatsRecords' resultType='com.netease.hivetools.meta.TabColStats'>
+    <select id='getTabColStatsRecords' resultType='com.q.hivetools.meta.TabColStats'>
         <![CDATA[
             SELECT * FROM TAB_COL_STATS ORDER BY CS_ID
         ]]>
@@ -1163,7 +1163,7 @@
     </delete>
 
     <!--TBLS-->
-    <select id='getTblsRecords' parameterType="java.util.Map" resultType='com.netease.hivetools.meta.Tbls'>
+    <select id='getTblsRecords' parameterType="java.util.Map" resultType='com.q.hivetools.meta.Tbls'>
         SELECT * FROM TBLS WHERE DB_ID like '${db_id}'
     </select>
 
@@ -1196,7 +1196,7 @@
     <delete id="rollbackTbls" parameterType="java.util.Map">
         DELETE FROM TBLS WHERE TBL_ID > ${mapPlusId.TBLS}
     </delete>
-    <delete id="deleteTbls" parameterType="com.netease.hivetools.meta.Tbls">
+    <delete id="deleteTbls" parameterType="com.q.hivetools.meta.Tbls">
         DELETE FROM PARTITION_KEY_VALS WHERE PART_ID IN (SELECT PART_ID FROM PARTITIONS WHERE TBL_ID = #{tbl_id});
         DELETE FROM PARTITION_PARAMS WHERE PART_ID IN (select PART_ID from PARTITIONS WHERE TBL_ID = #{tbl_id});
         DELETE FROM PARTITIONS WHERE TBL_ID = #{tbl_id};
@@ -1208,7 +1208,7 @@
     </delete>
 
     <!--TBL_COL_PRIVS-->
-    <select id='getTblColPrivsRecords' resultType='com.netease.hivetools.meta.TblColPrivs'>
+    <select id='getTblColPrivsRecords' resultType='com.q.hivetools.meta.TblColPrivs'>
         <![CDATA[
             SELECT * FROM TBL_COL_PRIVS ORDER BY TBL_COLUMN_GRANT_ID
         ]]>
@@ -1236,7 +1236,7 @@
     </delete>
 
     <!--TBL_PRIVS-->
-    <select id='getTblPrivsRecords' resultType='com.netease.hivetools.meta.TblPrivs'>
+    <select id='getTblPrivsRecords' resultType='com.q.hivetools.meta.TblPrivs'>
         <![CDATA[
             SELECT * FROM TBL_PRIVS ORDER BY TBL_GRANT_ID
         ]]>
@@ -1264,7 +1264,7 @@
     </delete>
 
     <!--TXNS-->
-    <select id='getTxnsRecords' resultType='com.netease.hivetools.meta.Txns'>
+    <select id='getTxnsRecords' resultType='com.q.hivetools.meta.Txns'>
         <![CDATA[
             SELECT * FROM TXNS ORDER BY TXN_ID
         ]]>
@@ -1292,7 +1292,7 @@
     </delete>
 
     <!--TXN_COMPONENTS-->
-    <select id='getTxnComponentsRecords' resultType='com.netease.hivetools.meta.TxnComponents'>
+    <select id='getTxnComponentsRecords' resultType='com.q.hivetools.meta.TxnComponents'>
         <![CDATA[
             SELECT * FROM TXN_COMPONENTS ORDER BY TC_TXNID
         ]]>
@@ -1318,7 +1318,7 @@
     </delete>
 
     <!--TYPES-->
-    <select id='getTypesRecords' resultType='com.netease.hivetools.meta.Types'>
+    <select id='getTypesRecords' resultType='com.q.hivetools.meta.Types'>
         <![CDATA[
             SELECT * FROM TYPES ORDER BY TYPES_ID
         ]]>
@@ -1339,7 +1339,7 @@
             (${mapPlusid.types} + #{item.types_id}, #{item.type_name}, #{item.type1}, #{item.type2})
         </foreach>
     </insert>
-    <select id="checkUniqueKeyTypes" parameterType="java.util.Map" resultType='com.netease.hivetools.meta.Types'>
+    <select id="checkUniqueKeyTypes" parameterType="java.util.Map" resultType='com.q.hivetools.meta.Types'>
         SELECT `TYPE_NAME` FROM TYPES WHERE `TYPE_NAME` IN
         <foreach collection="list" item="item"  open="(" separator="," close=")">
             #{item.type_name}
@@ -1350,7 +1350,7 @@
     </delete>
 
     <!--TYPE_FIELDS-->
-    <select id='getTypeFieldsRecords' resultType='com.netease.hivetools.meta.TypeFields'>
+    <select id='getTypeFieldsRecords' resultType='com.q.hivetools.meta.TypeFields'>
         <![CDATA[
             SELECT * FROM TYPE_FIELDS ORDER BY TYPE_NAME
         ]]>
@@ -1376,7 +1376,7 @@
     </delete>
 
     <!--BUCKETING_COLS-->
-    <select id='getBucketingColsRecords' resultType='com.netease.hivetools.meta.BucketingCols'>
+    <select id='getBucketingColsRecords' resultType='com.q.hivetools.meta.BucketingCols'>
         <![CDATA[
             SELECT * FROM BUCKETING_COLS ORDER BY SD_ID, INTEGER_IDX
         ]]>
@@ -1402,7 +1402,7 @@
     </delete>
 
     <!--COLUMNS_V2-->
-    <select id='getColumnsV2Records' resultType='com.netease.hivetools.meta.ColumnsV2'>
+    <select id='getColumnsV2Records' resultType='com.q.hivetools.meta.ColumnsV2'>
         <![CDATA[
             SELECT * FROM COLUMNS_V2 ORDER BY CD_ID
         ]]>
@@ -1428,7 +1428,7 @@
     </delete>
 
     <!--DATABASE_PARAMS-->
-    <select id='getDatabaseParamsRecords' resultType='com.netease.hivetools.meta.DatabaseParams'>
+    <select id='getDatabaseParamsRecords' resultType='com.q.hivetools.meta.DatabaseParams'>
         <![CDATA[
             SELECT * FROM DATABASE_PARAMS ORDER BY DB_ID
         ]]>
@@ -1454,7 +1454,7 @@
     </delete>
 
     <!--DB_PRIVS-->
-    <select id='getDbPrivsRecords' resultType='com.netease.hivetools.meta.DbPrivs'>
+    <select id='getDbPrivsRecords' resultType='com.q.hivetools.meta.DbPrivs'>
         <![CDATA[
             SELECT * FROM DB_PRIVS ORDER BY DB_GRANT_ID
         ]]>
@@ -1482,12 +1482,12 @@
     </delete>
 
     <!--VERSION-->
-    <select id='getVersionRecords' resultType='com.netease.hivetools.meta.Version'>
+    <select id='getVersionRecords' resultType='com.q.hivetools.meta.Version'>
         <![CDATA[
             SELECT * FROM VERSION ORDER BY VER_ID
         ]]>
     </select>
-    <select id="checkUniqueKeyVersion" parameterType="java.util.Map" resultType='com.netease.hivetools.meta.Version'>
+    <select id="checkUniqueKeyVersion" parameterType="java.util.Map" resultType='com.q.hivetools.meta.Version'>
         SELECT `SCHEMA_VERSION` FROM VERSION WHERE `SCHEMA_VERSION` NOT IN
         <foreach collection="list" item="item"  open="(" separator="," close=")">
             #{item.schema_version}
