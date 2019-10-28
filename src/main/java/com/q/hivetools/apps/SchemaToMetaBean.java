@@ -104,30 +104,35 @@ public class SchemaToMetaBean {
 					SQLDataType colDataType = ((SQLColumnDefinition)element).getDataType();
 
 					Class dataTypeClass = null;
-					if (true == colDataType.getName().equals("string")
-							|| true == colDataType.getName().equals("varchar")
-							|| true == colDataType.getName().equals("mediumtext")
-							|| true == colDataType.getName().equals("text")
-							|| true == colDataType.getName().equals("char")) {
+					String typeNameLower = colDataType.getName().toLowerCase();
+					if (true == typeNameLower.equals("string")
+							|| true == typeNameLower.equals("varchar")
+							|| true == typeNameLower.equals("mediumtext")
+							|| true == typeNameLower.equals("longtext")
+							|| true == typeNameLower.equals("text")
+							|| true == typeNameLower.equals("char")) {
 //						jPrimitiveType = jCodeModel.BYTE;;//new JPrimitiveType(jCodeModel, "string", String.class);
 						dataTypeClass = String.class;
-					} else if(true == colDataType.getName().equals("blob")) {
+					} else if(true == typeNameLower.equals("blob")) {
 						dataTypeClass = Blob.class;
-					} else if(true == colDataType.getName().equals("int")) {
+					} else if(true == typeNameLower.equals("int") || true == typeNameLower.equals("integer")) {
 						dataTypeClass = Long.class;
-					} else if(true == colDataType.getName().equals("tinyint")
-							|| true == colDataType.getName().equals("mediumint")
-							|| true == colDataType.getName().equals("smallint")) {
+					} else if(true == typeNameLower.equals("tinyint")
+							|| true == typeNameLower.equals("mediumint")
+							|| true == typeNameLower.equals("smallint")) {
 						dataTypeClass = Integer.class;
-					} else if(true == colDataType.getName().equals("bit")) {
+					} else if(true == typeNameLower.equals("bit")) {
 						dataTypeClass = Boolean.class;
-					} else if (true == colDataType.getName().equals("bigint")) {
+					} else if (true == typeNameLower.equals("bigint")) {
 						dataTypeClass = Long.class;
-					} else if(true == colDataType.getName().equals("float")) {
+					} else if(true == typeNameLower.equals("float")) {
 						dataTypeClass = Float.class;
-					}  else if(true == colDataType.getName().equals("double")) {
+					} else if(true == typeNameLower.equals("double")) {
 						dataTypeClass = Double.class;
+					} else if(true == typeNameLower.equals("mediumtext")) {
+						dataTypeClass = String.class;
 					} else {
+						System.out.println(typeNameLower);
 						System.out.println("unknown data type : " + colDataType.toString());
 						continue;
 					}
