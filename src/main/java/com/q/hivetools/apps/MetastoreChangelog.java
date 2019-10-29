@@ -10,6 +10,7 @@ import org.apache.curator.framework.state.ConnectionState;
 import org.apache.curator.framework.state.ConnectionStateListener;
 import org.apache.curator.retry.RetryNTimes;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.ibatis.io.Resources;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.curator.framework.CuratorFramework;
@@ -62,7 +63,11 @@ public class MetastoreChangelog {
   private final static String LOCK_RELATIVE_PATH = "/lock";
 
   public static void main(String[] args) {
-    PropertyConfigurator.configure("log4j.properties");
+    try {
+      PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     cliCommond(args);
 

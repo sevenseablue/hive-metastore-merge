@@ -32,10 +32,12 @@ public class MyBatisUtil {
     }
 
     Properties allProps = new Properties();
-    File file = new File("hive-tools.properties");
+    File file = null;
     FileInputStream fis = null;
     try {
+      file = Resources.getResourceAsFile("hive-tools.properties");
       fis = new FileInputStream(file);
+      System.out.println(file.getAbsolutePath());
       allProps.load(fis);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
@@ -49,8 +51,15 @@ public class MyBatisUtil {
         }
       }
     }
+    for (String name : allProps.stringPropertyNames()){
+      System.out.println(name + "\t" + allProps.getProperty(name));
+    }
+
+
 
     Properties props = new Properties();
+    System.out.println(sourceName+".jdbc.driverClassName");
+    System.out.println(allProps.getProperty(sourceName+".jdbc.driverClassName"));
     props.setProperty("jdbc.driverClassName", allProps.getProperty(sourceName+".jdbc.driverClassName"));
     props.setProperty("jdbc.url", allProps.getProperty(sourceName+".jdbc.url"));
     props.setProperty("jdbc.username", allProps.getProperty(sourceName+".jdbc.username"));

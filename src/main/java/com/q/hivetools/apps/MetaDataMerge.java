@@ -13,9 +13,11 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.apache.ibatis.io.Resources;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +30,11 @@ public class MetaDataMerge {
 	private static final Logger logger = Logger.getLogger(MetaDataMerge.class.getName());
 
 	public static void main(String[] args) {
-		PropertyConfigurator.configure("log4j.properties");
+		try {
+			PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		cliCommond(args);
 
@@ -72,7 +78,7 @@ public class MetaDataMerge {
 		MetaDataMapper sourceMetaData = new MetaDataMapper(MyBatisUtil.sourceName);
 		MetaDataMapper destMetaData = new MetaDataMapper(MyBatisUtil.destName);
 
-		MetaDataMapper staticOnlineMetaData = new MetaDataMapper(MyBatisUtil.onlneName);
+		MetaDataMapper staticOnlineMetaData = destMetaData; // new MetaDataMapper(MyBatisUtil.onlneName);
 
 		List<String> tables = new ArrayList<String>();
 		HashMap<String, Object> mapPlusId = new HashMap<String, Object>();
@@ -127,6 +133,7 @@ public class MetaDataMerge {
 		tables.add("COLUMNS_V2");
 		tables.add("DATABASE_PARAMS");
 		tables.add("DB_PRIVS");
+		tables.add("KEY_CONSTRAINTS");
 
 		/* not merge
 		tables.add("ROLES");
@@ -144,7 +151,7 @@ public class MetaDataMerge {
 		pagingProc.put("SERDE_PARAMS", "");
 
 		boolean conflict = checkConflict();
-		checkHdfsCluster();
+//		checkHdfsCluster();
 
 		Scanner sc = new Scanner(System.in);
 		String useInput = "";
@@ -173,12 +180,12 @@ public class MetaDataMerge {
 		String checkInput = "";
 
 		while (!checkInput.equals("Y")) {
-			System.out.println("请确认数据库的偏移量");
-			System.out.print("将元数据 " + MyBatisUtil.sourceName + " 合并到 " + MyBatisUtil.destName + " 操作请输入[Y/n] : ");
-
 			for (String tabName :tables) {
 				System.out.println("元数据表"+tabName+"偏移量为" + mapPlusId.get(tabName));
 			}
+
+			System.out.println("请确认数据库的偏移量");
+			System.out.print("将元数据 " + MyBatisUtil.sourceName + " 合并到 " + MyBatisUtil.destName + " 操作请输入[Y/n] : ");
 
 			checkInput = sc.nextLine();
 			if (checkInput.equalsIgnoreCase("n")) {
@@ -329,14 +336,14 @@ public class MetaDataMerge {
 			System.exit(1);
 		}
 
-		if( cl.hasOption("o") ) {
-			MyBatisUtil.onlneName = cl.getOptionValue("o");
-		} else {
-			System.out.println("missing --o arg");
-			HelpFormatter hf = new HelpFormatter();
-			hf.printHelp(formatstr, "", opt, "");
-			System.exit(1);
-		}
+//		if( cl.hasOption("o") ) {
+//			MyBatisUtil.onlneName = cl.getOptionValue("o");
+//		} else {
+//			System.out.println("missing --o arg");
+//			HelpFormatter hf = new HelpFormatter();
+//			hf.printHelp(formatstr, "", opt, "");
+//			System.exit(1);
+//		}
 	}
 
 	static private void rollback(List<String> tables, HashMap<String, Object> mapPlusId) {

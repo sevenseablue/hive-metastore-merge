@@ -6,10 +6,12 @@ import com.q.hivetools.apps.Mammut;
 import com.q.hivetools.apps.MetaDataMerge;
 import com.q.hivetools.apps.SchemaToMetaBean;
 import org.apache.commons.cli.*;
+import org.apache.ibatis.io.Resources;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,7 +22,11 @@ public class Main {
   private static final Logger logger = Logger.getLogger(Main.class.getName());
 
   public static void main(String[] args) {
-    PropertyConfigurator.configure("log4j.properties");
+    try {
+      PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
 //    test(args);
 //    cliCommond(args);

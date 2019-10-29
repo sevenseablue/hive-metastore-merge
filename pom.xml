@@ -38,7 +38,7 @@
     <mybatis.version>3.2.8</mybatis.version>
     <codemodel.version>2.6</codemodel.version>
     <druid.version>1.0.19</druid.version>
-    <mysql-connector-java.version>5.1.39</mysql-connector-java.version>
+    <mysql-connector-java.version>5.1.48</mysql-connector-java.version>
     <junit.version>3.8.1</junit.version>
     <hive.version>2.3.6</hive.version>
     <hadoop.version>2.7.7</hadoop.version>
@@ -179,24 +179,13 @@
 
   <build>
     <resources>
-      <!--resource>
-        <includes>
-          <include>*.json</include>
-          <include>*.sql</include>
-          <include>hive-tools.properties</include>
-          <include>log4j.properties</include>
-        </includes>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-        <targetPath>/target/classes</targetPath>
-      </resource-->
       <resource>
         <excludes>
-          <exclude>*.sql</exclude>
+<!--          <exclude>*.sql</exclude>-->
           <exclude>*.json</exclude>
           <exclude>hive-tools.sh</exclude>
-          <exclude>hive-tools.properties</exclude>
-          <exclude>log4j.properties</exclude>
+<!--          <exclude>hive-tools.properties</exclude>-->
+<!--          <exclude>log4j.properties</exclude>-->
         </excludes>
         <directory>src/main/resources</directory>
         <filtering>true</filtering>

@@ -5,9 +5,11 @@ import com.q.hivetools.meta.Dbs;
 import com.q.hivetools.meta.Tbls;
 import com.q.hivetools.service.MyBatisUtil;
 import org.apache.commons.cli.*;
+import org.apache.ibatis.io.Resources;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +24,11 @@ public class DelMetaData {
   private static String del_database_name = "";
   private static String del_table_name = "";
   public static void main(String[] args) {
-    PropertyConfigurator.configure("log4j.properties");
+    try {
+      PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     cliCommond(args);
 
@@ -115,8 +121,8 @@ public class DelMetaData {
     if( cl.hasOption("s") ) {
       String tempDb = cl.getOptionValue("s");
       if (!tempDb.equalsIgnoreCase("exchange_db")) {
-        System.out.println("错误! 待删除的数据源名称不是 exchange_db ??");
-        System.exit(1);
+//        System.out.println("错误! 待删除的数据源名称不是 exchange_db ??");
+//        System.exit(1);
       }
       MyBatisUtil.sourceName = tempDb;
     } else {

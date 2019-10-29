@@ -24,7 +24,7 @@ public class MammutMapper {
     List<PfHiveSite> list = null;
     SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory(this.sourceName).openSession();
     try {
-      String statement = "com.netease.hivetools.mappers.MammutMapper.getPfHivesite";
+      String statement = "com.q.hivetools.mappers.MammutMapper.getPfHivesite";
       list = sqlSession.selectList(statement);
     } catch (Exception e) {
       e.printStackTrace();

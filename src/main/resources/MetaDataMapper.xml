@@ -318,9 +318,9 @@
         ]]>
     </select>
     <insert id="batchInsertNotificationLog" parameterType="java.util.Map">
-        INSERT INTO NOTIFICATION_LOG (`NL_ID`,`EVENT_ID`,`EVENT_TIME`,`EVENT_TYPE`,`DB_NAME`,`TBL_NAME`,`MESSAGE`) VALUES
+        INSERT INTO NOTIFICATION_LOG (`NL_ID`,`EVENT_ID`,`EVENT_TIME`,`EVENT_TYPE`,`DB_NAME`,`TBL_NAME`,`MESSAGE`,`MESSAGE_FORMAT`) VALUES
         <foreach collection="list" item="item" index="index" separator=",">
-            (${mapPlusId.NOTIFICATION_LOG} + #{item.nl_id}, #{item.event_id}, #{item.event_time}, #{item.event_type}, #{item.db_name}, #{item.tbl_name}, #{item.message})
+            (${mapPlusId.NOTIFICATION_LOG} + #{item.nl_id}, #{item.event_id}, #{item.event_time}, #{item.event_type}, #{item.db_name}, #{item.tbl_name}, #{item.message}, #{item.message_format})
         </foreach>
     </insert>
     <delete id="rollbackNotificationLog" parameterType="java.util.Map">
@@ -402,10 +402,10 @@
     </select>
     <insert id="batchInsertPartitions" parameterType="java.util.Map">
         INSERT INTO PARTITIONS (`PART_ID`,`CREATE_TIME`,`LAST_ACCESS_TIME`,`PART_NAME`,`SD_ID`,
-                                `TBL_ID`,`LINK_TARGET_ID`) VALUES
+                                `TBL_ID`) VALUES
         <foreach collection="list" item="item" index="index" separator=",">
             (${mapPlusId.PARTITIONS} + #{item.part_id}, #{item.create_time}, #{item.last_access_time}, #{item.part_name},
-            ${mapPlusId.SDS} + #{item.sd_id}, ${mapPlusId.TBLS} + #{item.tbl_id}, ${mapPlusId.PARTITIONS} + #{item.link_target_id})
+            ${mapPlusId.SDS} + #{item.sd_id}, ${mapPlusId.TBLS} + #{item.tbl_id})
         </foreach>
     </insert>
     <delete id="rollbackPartitions" parameterType="java.util.Map">
@@ -1180,17 +1180,11 @@
     <insert id="batchInsertTbls" parameterType="java.util.Map">
         INSERT INTO TBLS (`TBL_ID`,`CREATE_TIME`,`DB_ID`,`LAST_ACCESS_TIME`,`OWNER`,
         `RETENTION`,`SD_ID`,`TBL_NAME`,`TBL_TYPE`,`VIEW_EXPANDED_TEXT`
-        ,`VIEW_ORIGINAL_TEXT`,`LINK_TARGET_ID`) VALUES
+        ,`VIEW_ORIGINAL_TEXT`,`IS_REWRITE_ENABLED`) VALUES
         <foreach collection="list" item="item" index="index" separator=",">
             (${mapPlusId.TBLS} + #{item.tbl_id}, #{item.create_time}, ${mapPlusId.DBS} + #{item.db_id}, #{item.last_access_time}, #{item.owner},
             #{item.retention}, ${mapPlusId.SDS} + #{item.sd_id}, #{item.tbl_name}, #{item.tbl_type}, #{item.view_expanded_text},
-            #{item.view_original_text},
-            <if test="item.getLinkTargetId() != null">
-                ${mapPlusId.TBLS} + #{item.link_target_id})
-            </if>
-            <if test="item.getLinkTargetId() == null">
-                #{item.link_target_id})
-            </if>
+            #{item.view_original_text}, #{item.is_rewrite_enabled})
         </foreach>
     </insert>
     <delete id="rollbackTbls" parameterType="java.util.Map">
@@ -1495,5 +1489,31 @@
     </select>
     <delete id="rollbackVersion" parameterType="java.util.Map">
         SELECT 0 FROM dual
+    </delete>
+
+    <!--KEY_CONSTRAINTS-->
+    <select id='getKeyConstraintsRecords' resultType='com.q.hivetools.meta.KeyConstraints'>
+        <![CDATA[
+            SELECT * FROM KEY_CONSTRAINTS ORDER BY PARENT_TBL_ID,PARENT_CD_ID,CHILD_TBL_ID,CHILD_CD_ID
+        ]]>
+    </select>
+    <select id="getKeyConstraintsMaxId" resultType="int">
+        <![CDATA[
+            SELECT IFNULL(MAX(PARENT_TBL_ID), 0) FROM KEY_CONSTRAINTS
+        ]]>
+    </select>
+    <select id="getKeyConstraintsMinId" resultType="int">
+        <![CDATA[
+            SELECT IFNULL(MIN(PARENT_TBL_ID), 0) FROM KEY_CONSTRAINTS
+        ]]>
+    </select>
+    <insert id="batchInsertKeyConstraints" parameterType="java.util.Map">
+        INSERT INTO KEY_CONSTRAINTS (`CHILD_CD_ID`, `CHILD_INTEGER_IDX`, `CHILD_TBL_ID`, `PARENT_CD_ID`, `PARENT_INTEGER_IDX`, `PARENT_TBL_ID`, `POSITION`, `CONSTRAINT_NAME`, `CONSTRAINT_TYPE`, `UPDATE_RULE`, `DELETE_RULE`, `ENABLE_VALIDATE_RELY`) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (${mapPlusId.CDS} + #{item.child_cd_id}, #{item.child_integer_idx}, ${mapPlusId.TBLS} + #{item.child_tbl_id}, ${mapPlusId.CDS} + #{item.parent_cd_id}, #{item.parent_integer_idx}, ${mapPlusId.TBLS} + #{item.parent_tbl_id}, #{item.position}, #{item.constraint_name}, #{item.constraint_type}, #{item.update_rule}, #{item.delete_rule}, #{item.enable_validate_rely})
+        </foreach>
+    </insert>
+    <delete id="rollbackKeyConstraints" parameterType="java.util.Map">
+        DELETE FROM KEY_CONSTRAINTS WHERE PARENT_TBL_ID > ${mapPlusId.KEY_CONSTRAINTS}
     </delete>
 </mapper>
