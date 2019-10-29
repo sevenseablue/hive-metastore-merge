@@ -17,6 +17,6 @@
     <mappers>
         <mapper resource='MetaDataMapper.xml'/>
         <mapper resource='TestMapper.xml'/>
-<!--        <mapper resource='MammutMapper.xml'/>-->
+        <mapper resource='MammutMapper.xml'/>
     </mappers>
 </configuration>
