@@ -5,6 +5,7 @@ import com.q.hivetools.meta.Dbs;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class TestMapper {
@@ -21,7 +22,9 @@ public class TestMapper {
         SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory(this.sourceName).openSession();
         try {
             String statement = "com.q.hivetools.mappers.TestMapper.getDbs";
-            list = sqlSession.selectList(statement);
+            Dbs dbs = new Dbs();
+            dbs.setDbId(1l);
+            list = sqlSession.selectList(statement, dbs);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -29,11 +32,10 @@ public class TestMapper {
             sqlSession.close();
         }
 
-
-        for (Dbs dbs : list) {
-            logger.info(dbs.toString());
+        for(Dbs dbs: list){
+            System.out.println(dbs);
         }
-        logger.info("getDbs <<<<<<<< ");
+
         return list;
     }
 }

@@ -28,8 +28,8 @@ public class Test1 {
 
     PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
 
-    MyBatisUtil.sourceName = "local";
-    TestMapper testMapper = new TestMapper("local");
+    MyBatisUtil.sourceName = "localpg";
+    TestMapper testMapper = new TestMapper("localpg");
     List<Dbs> list = testMapper.getDbs();
   }
 }

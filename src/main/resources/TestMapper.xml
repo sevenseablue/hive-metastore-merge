@@ -3,7 +3,33 @@
         'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
 
 <mapper namespace='com.q.hivetools.mappers.TestMapper'>
-    <select id='getDbs' resultType='com.q.hivetools.meta.Dbs'>
-        SELECT * FROM DBS WHERE 1=1 AND NAME like '%test%'
+    <select id='getDbs' parameterType="com.q.hivetools.meta.Dbs" resultType='com.q.hivetools.meta.Dbs'>
+        SELECT * FROM "DBS" WHERE 1=1 AND "DB_ID" = ${db_id}
     </select>
+
+    <!--CDS-->
+    <select id='getCdsRecords' resultType='com.q.hivetools.meta.Cds'>
+        <![CDATA[
+            SELECT * FROM "CDS" ORDER BY "CD_ID"
+        ]]>
+    </select>
+    <select id="getCdsMaxId" resultType="int">
+        <![CDATA[
+            SELECT IFNULL(MAX("CD_ID"), 0) FROM "CDS"
+        ]]>
+    </select>
+    <select id="getCdsMinId" resultType="int">
+        <![CDATA[
+            SELECT IFNULL(MIN("CD_ID"), 0) FROM "CDS"
+        ]]>
+    </select>
+    <insert id="batchInsertCds" parameterType="java.util.Map">
+        INSERT INTO "CDS"  ("CD_ID") VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (${mapPlusId.CDS} + #{item.cd_id} )
+        </foreach>
+    </insert>
+    <delete id="rollbackCds" parameterType="java.util.Map">
+        DELETE FROM "CDS" WHERE "CD_ID" > ${mapPlusId.CDS}
+    </delete>
 </mapper>

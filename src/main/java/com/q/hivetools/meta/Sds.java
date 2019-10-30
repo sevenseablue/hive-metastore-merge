@@ -5,14 +5,14 @@ package com.q.hivetools.meta;
 public class Sds {
 
     private Long sd_id;
-    private Long cd_id;
     private String input_format;
     private Boolean is_compressed;
-    private Boolean is_storedassubdirectories;
     private String location;
     private Long num_buckets;
     private String output_format;
     private Long serde_id;
+    private Long cd_id;
+    private Boolean is_storedassubdirectories;
 
     public void Sds() {
     }
@@ -23,14 +23,6 @@ public class Sds {
 
     public Long getSdId() {
         return sd_id;
-    }
-
-    public void setCdId(Long cdId_) {
-        cd_id = cdId_;
-    }
-
-    public Long getCdId() {
-        return cd_id;
     }
 
     public void setInputFormat(String inputFormat_) {
@@ -47,14 +39,6 @@ public class Sds {
 
     public Boolean getIsCompressed() {
         return is_compressed;
-    }
-
-    public void setIsStoredassubdirectories(Boolean isStoredassubdirectories_) {
-        is_storedassubdirectories = isStoredassubdirectories_;
-    }
-
-    public Boolean getIsStoredassubdirectories() {
-        return is_storedassubdirectories;
     }
 
     public void setLocation(String location_) {
@@ -87,6 +71,22 @@ public class Sds {
 
     public Long getSerdeId() {
         return serde_id;
+    }
+
+    public void setCdId(Long cdId_) {
+        cd_id = cdId_;
+    }
+
+    public Long getCdId() {
+        return cd_id;
+    }
+
+    public void setIsStoredassubdirectories(Boolean isStoredassubdirectories_) {
+        is_storedassubdirectories = isStoredassubdirectories_;
+    }
+
+    public Boolean getIsStoredassubdirectories() {
+        return is_storedassubdirectories;
     }
 
 }
