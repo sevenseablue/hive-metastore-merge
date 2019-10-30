@@ -15,9 +15,15 @@ import java.util.*;
 public class MetaDataMapper {
   private static final Logger logger = Logger.getLogger(MetaDataMapper.class.getName());
   private String sourceName;
+  private String mapper;
 
   public MetaDataMapper(String sourceName) {
     this.sourceName = sourceName;
+    if (MyBatisUtil.isMysql(this.sourceName)) {
+      this.mapper = "com.q.hivetools.mappers.MetaDataMapper";
+    }else {
+      this.mapper = "com.q.hivetools.mappers.MetaDataMapperPg";
+    }
   }
 
   // table => Table
@@ -29,11 +35,13 @@ public class MetaDataMapper {
     return tabName;
   }
 
+
+
   public List<Object> getDbsRecords(String tabName) {
     List<Object> list = null;
     SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory(this.sourceName).openSession();
     try {
-      String statement = "com.q.hivetools.mappers.MetaDataMapper.getTabsRecords";
+      String statement = this.mapper + ".getTabsRecords";
       list = sqlSession.selectList(statement);
     } catch (Exception e) {
       e.printStackTrace();
@@ -49,7 +57,7 @@ public class MetaDataMapper {
     SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory(this.sourceName).openSession();
     try {
       tabName = SchemaToMetaBean.formatTableColumnName(tabName, true);
-      String statement = "com.q.hivetools.mappers.MetaDataMapper.get" + tabName + "Records";
+      String statement = this.mapper + ".get" + tabName + "Records";
 
       if (null == params) {
         // init
@@ -73,7 +81,7 @@ public class MetaDataMapper {
     SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory(this.sourceName).openSession();
     try {
       tabName = SchemaToMetaBean.formatTableColumnName(tabName, true);
-      String statement = "com.q.hivetools.mappers.MetaDataMapper.getPaging" + tabName + "Records";
+      String statement = this.mapper + ".getPaging" + tabName + "Records";
       Map<String, Object> params = new HashMap<String,Object>();
       params.put("mapPagindId", mapPagindId);
       list = sqlSession.selectList(statement, params);
@@ -91,7 +99,7 @@ public class MetaDataMapper {
     SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory(this.sourceName).openSession();
     try {
       tabName = SchemaToMetaBean.formatTableColumnName(tabName, true);
-      String statement = "com.q.hivetools.mappers.MetaDataMapper.get" + tabName+ "MaxId";
+      String statement = this.mapper + ".get" + tabName+ "MaxId";
       maxId = sqlSession.selectOne(statement);
       logger.info("getTableMaxId" + tabName + " maxId = " + maxId);
     } catch (Exception e) {
@@ -106,7 +114,7 @@ public class MetaDataMapper {
   public boolean deleteTable(Tbls tbls) {
     SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory(this.sourceName).openSession();
     try {
-      String statement = "com.q.hivetools.mappers.MetaDataMapper.deleteTbls";
+      String statement = this.mapper + ".deleteTbls";
       int delCount = sqlSession.delete(statement, tbls);
       sqlSession.commit();
       logger.info("--- deleteTable[" + tbls.getTblName() + "]--- delete count = " + delCount);
@@ -123,7 +131,7 @@ public class MetaDataMapper {
   public boolean deleteDatabase(Dbs dbs) {
     SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory(this.sourceName).openSession();
     try {
-      String statement = "com.q.hivetools.mappers.MetaDataMapper.deleteDbs";
+      String statement = this.mapper + ".deleteDbs";
       int delCount = sqlSession.delete(statement, dbs);
       sqlSession.commit();
       logger.info("=== deleteDatabase[" + dbs.getName() + "]=== delete count = " + delCount);
@@ -142,7 +150,7 @@ public class MetaDataMapper {
     SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory(this.sourceName).openSession();
     try {
       tabName = SchemaToMetaBean.formatTableColumnName(tabName, true);
-      String statement = "com.q.hivetools.mappers.MetaDataMapper.get" +tabName+ "MinId";
+      String statement = this.mapper + ".get" +tabName+ "MinId";
       minId = sqlSession.selectOne(statement);
       logger.info("getTableMinId" + tabName + " minId = " + minId);
     } catch (Exception e) {
@@ -175,7 +183,7 @@ public class MetaDataMapper {
 
         tmpSubList = subList;
 
-        String statement = "com.q.hivetools.mappers.MetaDataMapper.batchInsert" + tableName;
+        String statement = this.mapper + ".batchInsert" + tableName;
         numInsert += sqlSession.insert(statement, params);
         int progress = ((index++ + 1)*100 / splitList.size());
         logger.info("批量插入表 " + tabName + " 处理进度 [" + progress +"%]");
@@ -206,7 +214,7 @@ public class MetaDataMapper {
     int count = 0;
     SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory(this.sourceName).openSession();
     try {
-      String statement = "com.q.hivetools.mappers.MetaDataMapper.updateSequenceTable";
+      String statement = this.mapper + ".updateSequenceTable";
       count = sqlSession.update(statement);
       sqlSession.commit();
       logger.info("update SequenceTable count = " + count);
@@ -226,7 +234,7 @@ public class MetaDataMapper {
       String tableName = SchemaToMetaBean.formatTableColumnName(tabName, true);
       logger.info("回滚元数据表 " + tabName + " plusId = " + mapPlusId.get(tabName));
 
-      String statement = "com.q.hivetools.mappers.MetaDataMapper.rollback" + tableName;
+      String statement = this.mapper + ".rollback" + tableName;
       Map<String, Object> params = new HashMap<String,Object>();
       params.put("mapPlusId", mapPlusId);
       numRollback = sqlSession.delete(statement, params);
@@ -257,7 +265,7 @@ public class MetaDataMapper {
         Map<String, Object> params = new HashMap<String,Object>();
         params.put("list",  subList);
 
-        String statement = "com.q.hivetools.mappers.MetaDataMapper.checkUniqueKey" + tableName;
+        String statement = this.mapper + ".checkUniqueKey" + tableName;
         List<Object> listTmp = sqlSession.selectList(statement, params);
         if (listTmp != null) {
           listUniqueKey.addAll(listTmp);

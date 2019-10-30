@@ -22,16 +22,8 @@ public class MyBatisUtil {
   public static String sourceName;
   public static String destName;
   public static String onlneName;
-
-  private static void initSqlSessionFactory(String sourceName) {
-    Reader reader = null;
-    try {
-      reader = Resources.getResourceAsReader("mybatis-config.xml");
-    } catch (IOException e) {
-      throw new RuntimeException(e.getMessage());
-    }
-
-    Properties allProps = new Properties();
+  public static Properties allProps = new Properties();
+  static {
     File file = null;
     FileInputStream fis = null;
     try {
@@ -51,11 +43,22 @@ public class MyBatisUtil {
         }
       }
     }
-    for (String name : allProps.stringPropertyNames()){
-      System.out.println(name + "\t" + allProps.getProperty(name));
+//    for (String name : allProps.stringPropertyNames()){
+//      System.out.println(name + "\t" + allProps.getProperty(name));
+//    }
+  }
+
+  public static boolean isMysql(String sourceName){
+    return allProps.getProperty(sourceName+".jdbc.driverClassName").equals("com.mysql.jdbc.Driver");
+  }
+
+  private static void initSqlSessionFactory(String sourceName) {
+    Reader reader = null;
+    try {
+      reader = Resources.getResourceAsReader("mybatis-config.xml");
+    } catch (IOException e) {
+      throw new RuntimeException(e.getMessage());
     }
-
-
 
     Properties props = new Properties();
     System.out.println(sourceName+".jdbc.driverClassName");
