@@ -31,7 +31,7 @@
 
     <!--DBS-->
     <select id='getDbsRecords' parameterType="java.util.Map" resultType='com.q.hivetools.meta.Dbs'>
-        SELECT * FROM "DBS" WHERE 1 = 1 AND "NAME" LIKE '${database_name}'
+        SELECT * FROM "DBS" WHERE 1 = 1 AND "NAME" like '${database_name}'
     </select>
     <select id="getDbsMaxId" resultType="int">
         <![CDATA[
@@ -57,11 +57,11 @@
         </foreach>
     </select>
     <delete id="deleteDbs" parameterType="com.q.hivetools.meta.Dbs">
-        DELETE FROM "FUNC_RU" WHERE "FUNC_ID" IN (SELECT "FUNC_ID" FROM "FUNCS" WHERE "DB_ID" = #{db_id})
-        DELETE FROM "FUNCS" WHERE "DB_ID" = #{db_id}
-        DELETE FROM "DATABASE_PARAMS" WHERE "DB_ID" = #{db_id}
-        DELETE FROM "DB_PRIVS" WHERE "DB_ID" = #{db_id}
-        DELETE FROM "DBS" WHERE "DB_ID" = #{db_id}
+        DELETE FROM "FUNC_RU" WHERE "FUNC_ID" IN (SELECT "FUNC_ID" FROM "FUNCS" WHERE "DB_ID" = #{db_id});
+        DELETE FROM "FUNCS" WHERE "DB_ID" = #{db_id};
+        DELETE FROM "DATABASE_PARAMS" WHERE "DB_ID" = #{db_id};
+        DELETE FROM "DB_PRIVS" WHERE "DB_ID" = #{db_id};
+        DELETE FROM "DBS" WHERE "DB_ID" = #{db_id};
     </delete>
     <delete id="rollbackDbs" parameterType="java.util.Map">
         DELETE FROM "DBS" WHERE "DB_ID" > ${mapPlusId.DBS}
@@ -75,12 +75,12 @@
     </select>
     <select id="getDelegationTokensMaxId" resultType="int">
         <![CDATA[
-        SELECT 0 FROM "dual"
+        SELECT 0
     ]]>
     </select>
     <select id="getDelegationTokensMinId" resultType="int">
         <![CDATA[
-        SELECT 0 FROM "dual"
+        SELECT 0
     ]]>
     </select>
     <insert id="batchInsertDelegationTokens" parameterType="java.util.Map">
@@ -90,59 +90,59 @@
         </foreach>
     </insert>
     <delete id="rollbackDelegationTokens" parameterType="java.util.Map">
-        SELECT 0 FROM "dual"
+        SELECT 0
     </delete>
 
     <!--compaction_queue-->
     <select id='getCompactionQueueRecords' resultType='com.q.hivetools.meta.CompactionQueue'>
         <![CDATA[
-        SELECT * FROM "COMPACTION_QUEUE" ORDER BY "CQ_ID"
+        select * from "compaction_queue" order by "cq_id"
     ]]>
     </select>
     <select id="getCompactionQueueMaxId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MAX("CQ_ID"), 0) FROM "COMPACTION_QUEUE"
+        select coalesce(max("cq_id"), 0) from "compaction_queue"
     ]]>
     </select>
     <select id="getCompactionQueueMinId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MIN("CQ_ID"), 0) FROM "COMPACTION_QUEUE"
+        select coalesce(min("cq_id"), 0) from "compaction_queue"
     ]]>
     </select>
     <insert id="batchInsertCompactionQueue" parameterType="java.util.Map">
-        INSERT INTO "COMPACTION_QUEUE" ("CQ_ID", "CQ_DATABASE", "CQ_TABLE", "CQ_PARTITION", "CQ_STATE", "CQ_TYPE", "CQ_WORKER_ID", "CQ_START", "CQ_RUN_AS") VALUES
+        insert into "compaction_queue" ("cq_id", "cq_database", "cq_table", "cq_partition", "cq_state", "cq_type", "cq_worker_id", "cq_start", "cq_run_as") values
     <foreach collection="list" item="item" index="index" separator=",">
             (${mapPlusId.COMPACTION_QUEUE} + #{item.cq_id}, #{item.cq_database}, #{item.cq_table}, #{item.cq_partition}, #{item.cq_state}, #{item.cq_type}, #{item.cq_worker_id}, #{item.cq_start}, #{item.cq_run_as})
         </foreach>
     </insert>
     <delete id="rollbackCompactionQueue" parameterType="java.util.Map">
-        DELETE FROM "COMPACTION_QUEUE" WHERE "CQ_ID" > ${mapPlusId.COMPACTION_QUEUE}
+        delete from "compaction_queue" where "cq_id" > ${mapPlusId.COMPACTION_QUEUE}
     </delete>
 
-    <!--COMPLETED_TXN_COMPONENTS-->
+    <!--completed_txn_components-->
     <select id='getCompletedTxnComponentsRecords' resultType='com.q.hivetools.meta.CompletedTxnComponents'>
         <![CDATA[
-        SELECT * FROM "COMPLETED_TXN_COMPONENTS" ORDER BY "CTC_TXNID"
+        select * from "completed_txn_components" order by "ctc_txnid"
     ]]>
     </select>
     <select id="getCompletedTxnComponentsMaxId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MAX("CTC_TXNID"), 0) FROM "COMPLETED_TXN_COMPONENTS"
+        select coalesce(max("ctc_txnid"), 0) from "completed_txn_components"
     ]]>
     </select>
     <select id="getCompletedTxnComponentsMinId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MIN("CTC_TXNID"), 0) FROM "COMPLETED_TXN_COMPONENTS"
+        select coalesce(min("ctc_txnid"), 0) from "completed_txn_components"
     ]]>
     </select>
     <insert id="batchInsertCompletedTxnComponents" parameterType="java.util.Map">
-        INSERT INTO "COMPLETED_TXN_COMPONENTS" ("CTC_TXNID", "CTC_DATABASE", "CTC_TABLE", "CTC_PARTITION") VALUES
+        insert into "completed_txn_components" ("ctc_txnid", "ctc_database", "ctc_table", "ctc_partition") values
     <foreach collection="list" item="item" index="index" separator=",">
             (${mapPlusId.COMPLETED_TXN_COMPONENTS} + #{item.ctc_txnid}, #{item.ctc_database}, #{item.ctc_table}, #{item.ctc_partition})
         </foreach>
     </insert>
     <delete id="rollbackCompletedTxnComponents" parameterType="java.util.Map">
-        DELETE FROM "COMPLETED_TXN_COMPONENTS" WHERE "CTC_TXNID" > ${mapPlusId.COMPLETED_TXN_COMPONENTS}
+        delete from "completed_txn_components" where "ctc_txnid" > ${mapPlusId.COMPLETED_TXN_COMPONENTS}
     </delete>
 
     <!--GLOBAL_PRIVS-->
@@ -171,108 +171,108 @@
         DELETE FROM "GLOBAL_PRIVS" WHERE "USER_GRANT_ID" > ${mapPlusId.GLOBAL_PRIVS}
     </delete>
 
-    <!--NEXT_TXN_ID-->
+    <!--next_txn_id-->
     <select id='getNextTxnIdRecords' resultType='com.q.hivetools.meta.NextTxnId'>
         <![CDATA[
-        SELECT * FROM "NEXT_TXN_ID" ORDER BY "NTXN_NEXT"
+        select * from "next_txn_id" order by "ntxn_next"
     ]]>
     </select>
     <select id="getNextTxnIdMaxId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MAX("NTXN_NEXT"), 0) FROM "NEXT_TXN_ID"
+        select coalesce(max("ntxn_next"), 0) from "next_txn_id"
     ]]>
     </select>
     <select id="getNextTxnIdMinId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MIN("NTXN_NEXT"), 0) FROM "NEXT_TXN_ID"
+        select coalesce(min("ntxn_next"), 0) from "next_txn_id"
     ]]>
     </select>
     <insert id="batchInsertNextTxnId" parameterType="java.util.Map">
-        INSERT INTO "NEXT_TXN_ID" ("NTXN_NEXT") VALUES
+        insert into "next_txn_id" ("ntxn_next") values
     <foreach collection="list" item="item" index="index" separator=",">
             (${mapPlusId.NEXT_TXN_ID} + #{item.ntxn_next})
         </foreach>
     </insert>
     <delete id="rollbackNextTxnId" parameterType="java.util.Map">
-        DELETE FROM "NEXT_TXN_ID" WHERE "NTXN_NEXT" > ${mapPlusId.NEXT_TXN_ID}
+        delete from "next_txn_id" where "ntxn_next" > ${mapPlusId.NEXT_TXN_ID}
     </delete>
 
-    <!--NEXT_LOCK_ID-->
+    <!--next_lock_id-->
     <select id='getNextLockIdRecords' resultType='com.q.hivetools.meta.NextLockId'>
         <![CDATA[
-        SELECT * FROM "NEXT_LOCK_ID" ORDER BY "NL_NEXT"
+        select * from "next_lock_id" order by "nl_next"
     ]]>
     </select>
     <select id="getNextLockIdMaxId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MAX("NL_NEXT"), 0) FROM "NEXT_LOCK_ID"
+        select coalesce(max("nl_next"), 0) from "next_lock_id"
     ]]>
     </select>
     <select id="getNextLockIdMinId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MIN("NL_NEXT"), 0) FROM "NEXT_LOCK_ID"
+        select coalesce(min("nl_next"), 0) from "next_lock_id"
     ]]>
     </select>
     <insert id="batchInsertNextLockId" parameterType="java.util.Map">
-        INSERT INTO "NEXT_LOCK_ID" ("NL_NEXT") VALUES
+        insert into "next_lock_id" ("nl_next") values
     <foreach collection="list" item="item" index="index" separator=",">
             (${mapPlusId.NEXT_LOCK_ID} + #{item.nl_next})
         </foreach>
     </insert>
     <delete id="rollbackNextLockId" parameterType="java.util.Map">
-        DELETE FROM "NEXT_LOCK_ID" WHERE "NL_NEXT" > ${mapPlusId.NEXT_LOCK_ID}
+        delete from "next_lock_id" where "nl_next" > ${mapPlusId.NEXT_LOCK_ID}
     </delete>
 
-    <!--NEXT_COMPACTION_QUEUE_ID-->
+    <!--next_compaction_queue_id-->
     <select id='getNextCompactionQueueIdRecords' resultType='com.q.hivetools.meta.NextCompactionQueueId'>
         <![CDATA[
-        SELECT * FROM "NEXT_COMPACTION_QUEUE_ID" ORDER BY "NCQ_NEXT"
+        select * from "next_compaction_queue_id" order by "ncq_next"
     ]]>
     </select>
     <select id="getNextCompactionQueueIdMaxId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MAX("NCQ_NEXT"), 0) FROM "NEXT_COMPACTION_QUEUE_ID"
+        select coalesce(max("ncq_next"), 0) from "next_compaction_queue_id"
     ]]>
     </select>
     <select id="getNextCompactionQueueIdMinId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MIN("NCQ_NEXT"), 0) FROM "NEXT_COMPACTION_QUEUE_ID"
+        select coalesce(min("ncq_next"), 0) from "next_compaction_queue_id"
     ]]>
     </select>
     <insert id="batchInsertNextCompactionQueueId" parameterType="java.util.Map">
-        INSERT INTO "NEXT_COMPACTION_QUEUE_ID" ("NCQ_NEXT") VALUES
+        insert into "next_compaction_queue_id" ("ncq_next") values
     <foreach collection="list" item="item" index="index" separator=",">
             (${mapPlusId.NEXT_COMPACTION_QUEUE_ID} + #{item.ncq_next})
         </foreach>
     </insert>
     <delete id="rollbackNextCompactionQueueId" parameterType="java.util.Map">
-        DELETE FROM "NEXT_COMPACTION_QUEUE_ID" WHERE "NCQ_NEXT" > ${mapPlusId.NEXT_COMPACTION_QUEUE_ID}
+        delete from "next_compaction_queue_id" where "ncq_next" > ${mapPlusId.NEXT_COMPACTION_QUEUE_ID}
     </delete>
 
-    <!--HIVE_LOCKS-->
+    <!--hive_locks-->
     <select id='getHiveLocksRecords' resultType='com.q.hivetools.meta.HiveLocks'>
         <![CDATA[
-        SELECT * FROM "HIVE_LOCKS" ORDER BY "HL_LOCK_EXT_ID"
+        select * from "hive_locks" order by "hl_lock_ext_id"
     ]]>
     </select>
     <select id="getHiveLocksMaxId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MAX("HL_LOCK_EXT_ID"), 0) FROM "HIVE_LOCKS"
+        select coalesce(max("hl_lock_ext_id"), 0) from "hive_locks"
     ]]>
     </select>
     <select id="getHiveLocksMinId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MIN("HL_LOCK_EXT_ID"), 0) FROM "HIVE_LOCKS"
+        select coalesce(min("hl_lock_ext_id"), 0) from "hive_locks"
     ]]>
     </select>
     <insert id="batchInsertHiveLocks" parameterType="java.util.Map">
-        INSERT INTO "HIVE_LOCKS" ("HL_LOCK_EXT_ID", "HL_LOCK_INT_ID", "HL_TXNID", "HL_DB", "HL_TABLE", "HL_PARTITION", "HL_LOCK_STATE", "HL_LOCK_TYPE", "HL_LAST_HEARTBEAT", "HL_ACQUIRED_AT", "HL_USER", "HL_HOST") VALUES
+        insert into "hive_locks" ("hl_lock_ext_id", "hl_lock_int_id", "hl_txnid", "hl_db", "hl_table", "hl_partition", "hl_lock_state", "hl_lock_type", "hl_last_heartbeat", "hl_acquired_at", "hl_user", "hl_host") values
     <foreach collection="list" item="item" index="index" separator=",">
             (${mapPlusId.HIVE_LOCKS} + #{item.hl_lock_ext_id}, #{item.hl_lock_int_id}, #{item.hl_txnid}, #{item.hl_db}, #{item.hl_table}, #{item.hl_partition}, #{item.hl_lock_state}, #{item.hl_lock_type}, #{item.hl_last_heartbeat}, #{item.hl_acquired_at}, #{item.hl_user}, #{item.hl_host})
         </foreach>
     </insert>
     <delete id="rollbackHiveLocks" parameterType="java.util.Map">
-        DELETE FROM "HIVE_LOCKS" WHERE "HL_LOCK_EXT_ID" > ${mapPlusId.HIVE_LOCKS}
+        delete from "hive_locks" where "hl_lock_ext_id" > ${mapPlusId.HIVE_LOCKS}
     </delete>
 
     <!--MASTER_KEYS-->
@@ -361,12 +361,12 @@
     </select>
     <select id="getNucleusTablesMaxId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MAX("CLASS_NAME"), 0) FROM "NUCLEUS_TABLES"
+        SELECT COALESCE(MAX("CLASS_NAME"), '0') FROM "NUCLEUS_TABLES"
     ]]>
     </select>
     <select id="getNucleusTablesMinId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MIN("CLASS_NAME"), 0) FROM "NUCLEUS_TABLES"
+        SELECT COALESCE(MIN("CLASS_NAME"), '0') FROM "NUCLEUS_TABLES"
     ]]>
     </select>
     <insert id="batchInsertNucleusTables" parameterType="java.util.Map">
@@ -737,12 +737,12 @@
     </select>
     <select id="getSequenceTableMaxId" resultType="int">
         <![CDATA[
-        SELECT 0 FROM "dual"
+        SELECT 0
     ]]>
     </select>
     <select id="getSequenceTableMinId" resultType="int">
         <![CDATA[
-        SELECT 0 FROM "dual"
+        SELECT 0
     ]]>
     </select>
     <insert id="batchInsertSequenceTable" parameterType="java.util.Map">
@@ -752,21 +752,21 @@
         </foreach>
     </insert>
     <update id="updateSequenceTable">
-        UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("CD_ID") + 5 FROM "COLUMNS_V2") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MColumnDescriptor'
-        UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("DB_ID") + 5 FROM "DBS") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MDatabase'
-        UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("FUNC_ID") + 5 FROM "FUNCS") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MFunction'
+        UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("CD_ID") + 5 FROM "COLUMNS_V2") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MColumnDescriptor';
+        UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("DB_ID") + 5 FROM "DBS") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MDatabase';
+        UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("FUNC_ID") + 5 FROM "FUNCS") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MFunction';
     <!--'org.apache.hadoop.hive.metastore.model.MGlobalPrivilege'-->
-        UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("PART_ID") + 5 FROM "PARTITIONS") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MPartition'
+        UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("PART_ID") + 5 FROM "PARTITIONS") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MPartition';
     <!--'org.apache.hadoop.hive.metastore.model.MRole'-->
         <!--'org.apache.hadoop.hive.metastore.model.MRoleMap'-->
-        UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("SERDE_ID") + 5 FROM "SERDES") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MSerDeInfo'
-        UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("SD_ID") + 5 FROM "SDS") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MStorageDescriptor'
-        UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("TBL_ID") + 5 FROM "TBLS") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MTable'
+        UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("SERDE_ID") + 5 FROM "SERDES") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MSerDeInfo';
+        UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("SD_ID") + 5 FROM "SDS") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MStorageDescriptor';
+        UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("TBL_ID") + 5 FROM "TBLS") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MTable';
     <!--'org.apache.hadoop.hive.metastore.model.MTablePrivilege'-->
         <!--'org.apache.hadoop.hive.metastore.model.MVersionTable'-->
     </update>
     <delete id="rollbackSequenceTable" parameterType="java.util.Map">
-        SELECT 0 FROM "dual"
+        SELECT 0
     </delete>
 
     <!--SERDES-->
@@ -1150,7 +1150,7 @@
 
     <!--TBLS-->
     <select id='getTblsRecords' parameterType="java.util.Map" resultType='com.q.hivetools.meta.Tbls'>
-        SELECT * FROM "TBLS" WHERE "DB_ID" LIKE '${db_id}'
+        SELECT * FROM "TBLS" WHERE cast("DB_ID" as varchar) like '${db_id}'
     </select>
 
     <select id="getTblsMaxId" resultType="int">
@@ -1175,14 +1175,14 @@
         DELETE FROM "TBLS" WHERE "TBL_ID" > ${mapPlusId.TBLS}
     </delete>
     <delete id="deleteTbls" parameterType="com.q.hivetools.meta.Tbls">
-        DELETE FROM "PARTITION_KEY_VALS" WHERE "PART_ID" IN (SELECT "PART_ID" FROM "PARTITIONS" WHERE "TBL_ID" = #{tbl_id})
-        DELETE FROM "PARTITION_PARAMS" WHERE "PART_ID" IN (SELECT "PART_ID" FROM "PARTITIONS" WHERE "TBL_ID" = #{tbl_id})
-        DELETE FROM "PARTITIONS" WHERE "TBL_ID" = #{tbl_id}
-        DELETE FROM "PARTITION_KEYS" WHERE "TBL_ID" = #{tbl_id}
-        DELETE FROM "TABLE_PARAMS" WHERE "TBL_ID" = #{tbl_id}
-        DELETE FROM "TBL_PRIVS" WHERE "TBL_ID" = #{tbl_id}
-        DELETE FROM "TAB_COL_STATS" WHERE "TBL_ID" = #{tbl_id}
-        DELETE FROM "TBLS" WHERE "TBL_ID" = #{tbl_id}
+        DELETE FROM "PARTITION_KEY_VALS" WHERE "PART_ID" IN (SELECT "PART_ID" FROM "PARTITIONS" WHERE "TBL_ID" = #{tbl_id});
+        DELETE FROM "PARTITION_PARAMS" WHERE "PART_ID" IN (SELECT "PART_ID" FROM "PARTITIONS" WHERE "TBL_ID" = #{tbl_id});
+        DELETE FROM "PARTITIONS" WHERE "TBL_ID" = #{tbl_id};
+        DELETE FROM "PARTITION_KEYS" WHERE "TBL_ID" = #{tbl_id};
+        DELETE FROM "TABLE_PARAMS" WHERE "TBL_ID" = #{tbl_id};
+        DELETE FROM "TBL_PRIVS" WHERE "TBL_ID" = #{tbl_id};
+        DELETE FROM "TAB_COL_STATS" WHERE "TBL_ID" = #{tbl_id};
+        DELETE FROM "TBLS" WHERE "TBL_ID" = #{tbl_id};
     </delete>
 
     <!--TBL_COL_PRIVS-->
@@ -1239,57 +1239,57 @@
         DELETE FROM "TBL_PRIVS" WHERE "TBL_GRANT_ID" > ${mapPlusId.TBL_PRIVS}
     </delete>
 
-    <!--TXNS-->
+    <!--txns-->
     <select id='getTxnsRecords' resultType='com.q.hivetools.meta.Txns'>
         <![CDATA[
-        SELECT * FROM "TXNS" ORDER BY "TXN_ID"
+        select * from "txns" order by "txn_id"
     ]]>
     </select>
     <select id="getTxnsMaxId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MAX("TXN_ID"), 0) FROM "TXNS"
+        select coalesce(max("txn_id"), 0) from "txns"
     ]]>
     </select>
     <select id="getTxnsMinId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MIN("TXN_ID"), 0) FROM "TXNS"
+        select coalesce(min("txn_id"), 0) from "txns"
     ]]>
     </select>
     <insert id="batchInsertTxns" parameterType="java.util.Map">
-        INSERT INTO "TXNS" ("TXN_ID", "TXN_STATE", "TXN_STARTED", "TXN_LAST_HEARTBEAT", "TXN_USER", "TXN_HOST") VALUES
+        insert into "txns" ("txn_id", "txn_state", "txn_started", "txn_last_heartbeat", "txn_user", "txn_host") values
     <foreach collection="list" item="item" index="index" separator=",">
             (${mapPlusId.TXNS} + #{item.txn_id}, #{item.txn_state}, #{item.txn_started}, #{item.txn_last_heartbeat}, #{item.txn_user},
             #{item.txn_host})
         </foreach>
     </insert>
     <delete id="rollbackTxns" parameterType="java.util.Map">
-        DELETE FROM "TXNS" WHERE "TXN_ID" > ${mapPlusId.TXNS}
+        delete from "txns" where "txn_id" > ${mapPlusId.TXNS}
     </delete>
 
-    <!--TXN_COMPONENTS-->
+    <!--txn_components-->
     <select id='getTxnComponentsRecords' resultType='com.q.hivetools.meta.TxnComponents'>
         <![CDATA[
-        SELECT * FROM "TXN_COMPONENTS" ORDER BY "TC_TXNID"
+        select * from "txn_components" order by "tc_txnid"
     ]]>
     </select>
     <select id="getTxnComponentsMaxId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MAX("TC_TXNID"), 0) FROM "TXN_COMPONENTS"
+        select coalesce(max("tc_txnid"), 0) from "txn_components"
     ]]>
     </select>
     <select id="getTxnComponentsMinId" resultType="int">
         <![CDATA[
-        SELECT COALESCE(MIN("TC_TXNID"), 0) FROM "TXN_COMPONENTS"
+        select coalesce(min("tc_txnid"), 0) from "txn_components"
     ]]>
     </select>
     <insert id="batchInsertTxnComponents" parameterType="java.util.Map">
-        INSERT INTO "TXN_COMPONENTS" ("TC_TXNID", "TC_DATABASE", "TC_TABLE", "TC_PARTITION") VALUES
+        insert into "txn_components" ("tc_txnid", "tc_database", "tc_table", "tc_partition") values
     <foreach collection="list" item="item" index="index" separator=",">
             (${mapPlusId.TXNS} + #{item.TC_TXNID}, #{item.TC_DATABASE}, #{item.TC_TABLE}, #{item.TC_PARTITION})
         </foreach>
     </insert>
     <delete id="rollbackTxnComponents" parameterType="java.util.Map">
-        DELETE FROM "TXN_COMPONENTS" WHERE "TC_TXNID" > ${mapPlusId.TXN_COMPONENTS}
+        delete from "txn_components" where "tc_txnid" > ${mapPlusId.TXN_COMPONENTS}
     </delete>
 
     <!--TYPES-->
@@ -1468,7 +1468,7 @@
         </foreach>
     </select>
     <delete id="rollbackVersion" parameterType="java.util.Map">
-        SELECT 0 FROM "dual"
+        SELECT 0
     </delete>
 
     <!--KEY_CONSTRAINTS-->
