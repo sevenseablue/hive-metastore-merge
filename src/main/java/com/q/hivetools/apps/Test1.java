@@ -22,7 +22,8 @@ public class Test1 {
   private static final Logger logger = Logger.getLogger(Test1.class.getName());
 
   public static void main(String[] args) throws IOException {
-    File file = Resources.getResourceAsFile("hive-tools.properties");
+//    File file = Resources.getResourceAsFile("hive-tools.properties");
+    File file = new File("hive-tools.properties");
     BufferedReader br = new BufferedReader(new FileReader(file));
     System.out.println(br.readLine());
 

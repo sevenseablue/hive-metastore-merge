@@ -27,7 +27,8 @@ public class MyBatisUtil {
     File file = null;
     FileInputStream fis = null;
     try {
-      file = Resources.getResourceAsFile("hive-tools.properties");
+//      file = Resources.getResourceAsFile("hive-tools.properties");
+      file = new File("hive-tools.properties");
       fis = new FileInputStream(file);
       System.out.println(file.getAbsolutePath());
       allProps.load(fis);
