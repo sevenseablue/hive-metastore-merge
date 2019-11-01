@@ -1,12 +1,6 @@
-
-## hive-metastore-merge
-fork自[网易hive-tools](https://github.com/NetEase/hive-tools)
-- 原版支持hive1.2 mysql metastore合并
-- 现版支持hive2.3 mysql postgres metastore合并及之间合并
-
 ## hive-tools 项目介绍
 
-在公司内部有大大小小几百套 hive 集群，为了满足公司大数据平台的元数据统一管理的需求，我们需要将多个分别独立的 hive 集群的元数据信息进行合并，但是不需要移动 HDFS 中的数据文件，比如可以将 hive2、hive3、hive4 的元数据全部合并到 hive1 的元数据 Mysql 中，然后就可以在 hive1 中处理 hive2、hive3、hive4 中的数据。
+在网易集团内部有大大小小几百套 hive 集群，为了满足网易猛犸大数据平台的元数据统一管理的需求，我们需要将多个分别独立的 hive 集群的元数据信息进行合并，但是不需要移动 HDFS 中的数据文件，比如可以将 hive2、hive3、hive4 的元数据全部合并到 hive1 的元数据 Mysql 中，然后就可以在 hive1 中处理 hive2、hive3、hive4 中的数据。
 
 我们首先想到的是 hive 中有自带的 EXPORT 命令，可以把指定库表的数据和元数据导出到本地或者 HDFS 目录中，再通过 IMPORT 命令将元数据和数据文件导入新的 hive 仓库中，但是存在以下问题不符合我们的场景
 
@@ -45,7 +39,7 @@ hive 的元数据信息（metastore）一般是通过 Mysql 数据库进行存�
 
 ### 修改元数据的主外健 ID
 
-我们使用了一个方法来解决 ID 修改的问题：
+我们使用了一个巧妙的方法来解决 ID 修改的问题：
 
 1. 从目标 hive 中查询出所有表的最大 ID 号，将每个表的 ID 号加上源 hive 中所有对应表的 ID 号码，形成导入后新生成出的 ID 号，公式是：新表ID = 源表ID + 目标表 ID，因为所有的表都使用了相同的逻辑，通过这个方法我们的程序就不需要维护父子表之间主外健的 ID 号。
 2. 唯一可能会存在问题的是，在线导入过程中，目标 hive 新创建了 DB，导致 DB_ID 冲突的问题，为此，我们在每次导入 hive 增加一个跳号，公式变为：新表ID = 源表ID + 目标表 ID + 跳号值（100）
@@ -54,7 +48,7 @@ hive 的元数据信息（metastore）一般是通过 Mysql 数据库进行存�
 
 我们使用了 mybatis 进行了源和目标这 2 个 Mysql  的数据库操作，从源 Mysql 中按照上面的逻辑关系取出元数据修改主外健的 ID 号再插入到目标 Mysql 数据库中。
 
-1. 由于 mybatis 进行数据库操作的时候，需要通过表的 bean 对象进行操作，54 张表全部手工敲出来又累又容易出错，应该想办法偷懒，于是我们使用了 `druid` 解析 hive 的建表语句，再通过 `codemodel` 自动生成出了对应每个表的 54 个 JAVA 类对象。参见代码：`com.q.hivetools.apps.SchemaToMetaBean`
+1. 由于 mybatis 进行数据库操作的时候，需要通过表的 bean 对象进行操作，54 张表全部手工敲出来又累又容易出错，应该想办法偷懒，于是我们使用了 `druid` 解析 hive 的建表语句，再通过 `codemodel` 自动生成出了对应每个表的 54 个 JAVA 类对象。参见代码：`com.netease.hivetools.apps.SchemaToMetaBean`
 
    
 
@@ -88,7 +82,7 @@ hive 的元数据信息（metastore）一般是通过 Mysql 数据库进行存�
    export SOURCE_NAME=exchange_db
    export DEST_NAME=dest_hive
    
-   /home/hadoop/java-current/jre/bin/java -cp "./hive-tools-current.jar" com.q.hivetools.apps.MetaDataMerge --s=$SOURCE_NAME --d=$DEST_NAME
+   /home/hadoop/java-current/jre/bin/java -cp "./hive-tools-current.jar" com.netease.hivetools.apps.MetaDataMerge --s=$SOURCE_NAME --d=$DEST_NAME
    ```
 
 6. hive-tools 会在迁移元数据之前首先检查源和目的元数据库中重名的 hive db，终止元数据迁移操作并给出提示
@@ -101,13 +95,14 @@ hive 的元数据信息（metastore）一般是通过 Mysql 数据库进行存�
    export DEL_DB=default,nisp_nhids,real,azkaban_autotest_db
    export DEL_TBL=
    
-   ~/java-current/jre/bin/java -cp "./hive-tools-current.jar" com.q.hivetools.apps.DelMetaData --s=$SOURCE --d=$DEL_DB --t=$DEL_TBL
+   ~/java-current/jre/bin/java -cp "./hive-tools-current.jar" com.netease.hivetools.apps.DelMetaData --s=$SOURCE --d=$DEL_DB --t=$DEL_TBL
    ```
 
 8. 再次执行执行元数据迁移命令
 
 9. 检查元数据迁移命令窗口日志或文件日志，如果发现元数据合并出错，通过对目的数据库进行执行删除指定 hive db 的命令，将迁移过去的元数据进行删除，如果没有错误，通过 hive 客户端检查目的数据库中是否能够正常使用新迁移过来的元数据
 
+10. 严格按照我们的元数据迁移流程已经在网易集团内部通过 hive-tools 已经成功迁移合并了大量的 hive 元数据库，几乎没有出现过问题
 
 ## compile
 
@@ -115,3 +110,27 @@ mvn clean compile package -Dmaven.test.skip=true
 
 
 
+## history
+
+
+Release Notes - Hive-tools - Version 0.1.4
+
+ * [hive-tools-0.1.5]
+   MetaDataMerge add update SEQUENCE_TABLE NO
+
+ * [hive-tools-0.1.4]
+   MetastoreChangelog -z=zkHost -c=changelog -d=database -t=table
+   thrift -gen java src/main/thrift/MetastoreUpdater.thrift
+
+ * [hive-tools-0.1.3]
+    - delete database metedata database_name/table_name support % wildcard
+
+ * [hive-tools-0.1.2]
+    - hdfs proxy user test
+
+ * [hive-tools-0.1.1]
+    - delete database metedata
+
+ * [hive-tools-0.1.0]
+    - hive meta schema convert to java bean
+    - multiple hive meta merge
