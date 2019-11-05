@@ -76,6 +76,28 @@ public class MetaDataMapper {
     return list;
   }
 
+  public List<Object> getTableRecordsSess(String tabName, Map<String, Object> params, SqlSession sqlSession) {
+    List<Object> list = null;
+    try {
+      tabName = SchemaToMetaBean.formatTableColumnName(tabName, true);
+      String statement = this.mapper + ".get" + tabName + "Records";
+
+      if (null == params) {
+        // init
+        params = new HashMap<String,Object>();
+        params.put("database_name", "%");
+        params.put("db_id", "%");
+      }
+
+      list = sqlSession.selectList(statement, params);
+    } catch (Exception e) {
+      e.printStackTrace();
+      logger.error(e.getMessage());
+    } finally {
+    }
+    return list;
+  }
+
   public List<Object> getPagingTableRecords(String tabName, HashMap<String, Object> mapPagindId) {
     List<Object> list = null;
     SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory(this.sourceName).openSession();
@@ -128,6 +150,21 @@ public class MetaDataMapper {
     return true;
   }
 
+  public boolean deleteTableSess(Tbls tbls, SqlSession sqlSession) {
+    try {
+      String statement = this.mapper + ".deleteTbls";
+      int delCount = sqlSession.delete(statement, tbls);
+      logger.info("--- deleteTable[" + tbls.getTblName() + "]--- delete count = " + delCount);
+    } catch (Exception e) {
+      e.printStackTrace();
+      logger.error(e.getMessage());
+      return false;
+    } finally {
+
+    }
+    return true;
+  }
+
   public boolean deleteDatabase(Dbs dbs) {
     SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory(this.sourceName).openSession();
     try {
@@ -141,6 +178,20 @@ public class MetaDataMapper {
       return false;
     } finally {
       sqlSession.close();
+    }
+    return true;
+  }
+
+  public boolean deleteDatabaseSess(Dbs dbs, SqlSession sqlSession ) {
+    try {
+      String statement = this.mapper + ".deleteDbs";
+      int delCount = sqlSession.delete(statement, dbs);
+      logger.info("=== deleteDatabase[" + dbs.getName() + "]=== delete count = " + delCount);
+    } catch (Exception e) {
+      e.printStackTrace();
+      logger.error(e.getMessage());
+      return false;
+    } finally {
     }
     return true;
   }
