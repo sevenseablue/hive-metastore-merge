@@ -4,6 +4,15 @@ fork自[网易hive-tools](https://github.com/NetEase/hive-tools)
 - 原版支持hive1.2 mysql metastore合并
 - 现版支持hive2.3 mysql postgres metastore合并及之间合并
 
+
+##
+```text
+new Table: AuxTable,CompletedCompactions,WriteSet
+add columns: CompactionQueue,HiveLocks,TxnComponents,Txns
+columns orders: TabColStats,Sds,PartColStats,Dbs
+```
+
+
 ## hive-tools 项目介绍
 
 在公司内部有大大小小几百套 hive 集群，为了满足公司大数据平台的元数据统一管理的需求，我们需要将多个分别独立的 hive 集群的元数据信息进行合并，但是不需要移动 HDFS 中的数据文件，比如可以将 hive2、hive3、hive4 的元数据全部合并到 hive1 的元数据 Mysql 中，然后就可以在 hive1 中处理 hive2、hive3、hive4 中的数据。

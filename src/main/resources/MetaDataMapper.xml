@@ -110,9 +110,9 @@
         ]]>
     </select>
     <insert id="batchInsertCompactionQueue" parameterType="java.util.Map">
-        INSERT INTO COMPACTION_QUEUE (`CQ_ID`,`CQ_DATABASE`,`CQ_TABLE`,`CQ_PARTITION`,`CQ_STATE`,`CQ_TYPE`,`CQ_WORKER_ID`,`CQ_START`,`CQ_RUN_AS`) VALUES
+        INSERT INTO COMPACTION_QUEUE (`CQ_ID`,`CQ_DATABASE`,`CQ_TABLE`,`CQ_PARTITION`,`CQ_STATE`,`CQ_TYPE`,`cq_tblproperties`,`CQ_WORKER_ID`,`CQ_START`,`CQ_RUN_AS`,`cq_highest_txn_id`,`cq_hadoop_job_id`) VALUES
         <foreach collection="list" item="item" index="index" separator=",">
-            (${mapPlusId.COMPACTION_QUEUE} + #{item.cq_id}, #{item.cq_database}, #{item.cq_table}, #{item.cq_partition}, #{item.cq_state}, #{item.cq_type}, #{item.cq_worker_id}, #{item.cq_start}, #{item.cq_run_as})
+            (${mapPlusId.COMPACTION_QUEUE} + #{item.cq_id}, #{item.cq_database}, #{item.cq_table}, #{item.cq_partition}, #{item.cq_state}, #{item.cq_type}, #{item.cq_tblproperties}, #{item.cq_worker_id}, #{item.cq_start}, #{item.cq_run_as}, #{item.cq_highest_txn_id}, #{item.cq_hadoop_job_id})
         </foreach>
     </insert>
     <delete id="rollbackCompactionQueue" parameterType="java.util.Map">
@@ -266,9 +266,9 @@
         ]]>
     </select>
     <insert id="batchInsertHiveLocks" parameterType="java.util.Map">
-        INSERT INTO HIVE_LOCKS (`HL_LOCK_EXT_ID`,`HL_LOCK_INT_ID`,`HL_TXNID`,`HL_DB`,`HL_TABLE`,`HL_PARTITION`,`HL_LOCK_STATE`,`HL_LOCK_TYPE`,`HL_LAST_HEARTBEAT`,`HL_ACQUIRED_AT`,`HL_USER`,`HL_HOST`) VALUES
+        INSERT INTO HIVE_LOCKS (`HL_LOCK_EXT_ID`,`HL_LOCK_INT_ID`,`HL_TXNID`,`HL_DB`,`HL_TABLE`,`HL_PARTITION`,`HL_LOCK_STATE`,`HL_LOCK_TYPE`,`HL_LAST_HEARTBEAT`,`HL_ACQUIRED_AT`,`HL_USER`,`HL_HOST`,`hl_heartbeat_count`,`hl_agent_info`,`hl_blockedby_ext_id`,`hl_blockedby_int_id`) VALUES
         <foreach collection="list" item="item" index="index" separator=",">
-            (${mapPlusId.HIVE_LOCKS} + #{item.hl_lock_ext_id}, #{item.hl_lock_int_id}, #{item.hl_txnid}, #{item.hl_db}, #{item.hl_table}, #{item.hl_partition}, #{item.hl_lock_state}, #{item.hl_lock_type}, #{item.hl_last_heartbeat}, #{item.hl_acquired_at}, #{item.hl_user}, #{item.hl_host})
+            (${mapPlusId.HIVE_LOCKS} + #{item.hl_lock_ext_id}, #{item.hl_lock_int_id}, #{item.hl_txnid}, #{item.hl_db}, #{item.hl_table}, #{item.hl_partition}, #{item.hl_lock_state}, #{item.hl_lock_type}, #{item.hl_last_heartbeat}, #{item.hl_acquired_at}, #{item.hl_user}, #{item.hl_host}, #{item.hl_heartbeat_count}, #{item.hl_agent_info}, #{item.hl_blockedby_ext_id}, #{item.hl_blockedby_int_id})
         </foreach>
     </insert>
     <delete id="rollbackHiveLocks" parameterType="java.util.Map">
@@ -1198,7 +1198,9 @@
         DELETE FROM TABLE_PARAMS WHERE TBL_ID = #{tbl_id};
         DELETE FROM TBL_PRIVS WHERE TBL_ID = #{tbl_id};
         DELETE FROM TAB_COL_STATS WHERE TBL_ID = #{tbl_id};
+        DELETE FROM KEY_CONSTRAINTS WHERE PARENT_TBL_ID = #{tbl_id};
         DELETE FROM TBLS WHERE TBL_ID = #{tbl_id};
+
     </delete>
 
     <!--TBL_COL_PRIVS-->
@@ -1275,10 +1277,9 @@
     </select>
     <insert id="batchInsertTxns" parameterType="java.util.Map">
         INSERT INTO TXNS (`TXN_ID`,`TXN_STATE`,`TXN_STARTED`,`TXN_LAST_HEARTBEAT`,`TXN_USER`,
-        `TXN_HOST`) VALUES
+        `TXN_HOST`,`txn_agent_info`,`txn_meta_info`,`txn_heartbeat_count`) VALUES
         <foreach collection="list" item="item" index="index" separator=",">
-            (${mapPlusId.TXNS} + #{item.txn_id}, #{item.txn_state}, #{item.txn_started}, #{item.txn_last_heartbeat}, #{item.txn_user},
-            #{item.txn_host})
+            (${mapPlusId.TXNS} + #{item.txn_id}, #{item.txn_state}, #{item.txn_started}, #{item.txn_last_heartbeat}, #{item.txn_user}, #{item.txn_host}, #{item.txn_agent_info}, #{item.txn_meta_info}, #{item.txn_heartbeat_count})
         </foreach>
     </insert>
     <delete id="rollbackTxns" parameterType="java.util.Map">
@@ -1302,9 +1303,9 @@
         ]]>
     </select>
     <insert id="batchInsertTxnComponents" parameterType="java.util.Map">
-        INSERT INTO TXN_COMPONENTS (`TC_TXNID`,`TC_DATABASE`,`TC_TABLE`,`TC_PARTITION`) VALUES
+        INSERT INTO TXN_COMPONENTS (`TC_TXNID`,`TC_DATABASE`,`TC_TABLE`,`TC_PARTITION`,`tc_operation_type`) VALUES
         <foreach collection="list" item="item" index="index" separator=",">
-            (${mapPlusId.TXNS} + #{item.TC_TXNID}, #{item.TC_DATABASE}, #{item.TC_TABLE}, #{item.TC_PARTITION})
+            (${mapPlusId.TXNS} + #{item.TC_TXNID}, #{item.TC_DATABASE}, #{item.TC_TABLE}, #{item.TC_PARTITION}, #{item.tc_operation_type})
         </foreach>
     </insert>
     <delete id="rollbackTxnComponents" parameterType="java.util.Map">
@@ -1514,6 +1515,85 @@
         </foreach>
     </insert>
     <delete id="rollbackKeyConstraints" parameterType="java.util.Map">
-        DELETE FROM KEY_CONSTRAINTS WHERE PARENT_TBL_ID > ${mapPlusId.KEY_CONSTRAINTS}
+        DELETE FROM KEY_CONSTRAINTS WHERE PARENT_TBL_ID > ${mapPlusId.TBLS}
+    </delete>
+
+    <!--Aux_Table-->
+    <select id='getAuxTableRecords' resultType='com.q.hivetools.meta.AuxTable'>
+        <![CDATA[
+            SELECT * FROM AUX_TABLE ORDER BY MT_KEY1,MT_KEY2
+        ]]>
+    </select>
+    <select id="getAuxTableMaxId" resultType="int">
+        <![CDATA[
+            SELECT 0 from dual
+        ]]>
+    </select>
+    <select id="getAuxTableMinId" resultType="int">
+        <![CDATA[
+            SELECT 0 from dual
+        ]]>
+    </select>
+    <insert id="batchInsertAuxTable" parameterType="java.util.Map">
+        INSERT INTO AUX_TABLE (`MT_KEY1`,`MT_KEY2`,`MT_COMMENT`) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.mt_key1}, #{item.mt_key2}, #{item.mt_comment})
+        </foreach>
+    </insert>
+    <delete id="rollbackAuxTable" parameterType="java.util.Map">
+        SELECT 0 FROM dual
+    </delete>
+
+
+    <!--COMPLETED_COMPACTIONS-->
+    <select id='getCompletedCompactionsRecords' resultType='com.q.hivetools.meta.CompletedCompactions'>
+        <![CDATA[
+            SELECT * FROM COMPLETED_COMPACTIONS ORDER BY CC_ID
+        ]]>
+    </select>
+    <select id="getCompletedCompactionsMaxId" resultType="int">
+        <![CDATA[
+            SELECT IFNULL(MAX(CC_ID), 0) from COMPLETED_COMPACTIONS
+        ]]>
+    </select>
+    <select id="getCompletedCompactionsMinId" resultType="int">
+        <![CDATA[
+            SELECT IFNULL(MIN(CC_ID), 0)  from COMPLETED_COMPACTIONS
+        ]]>
+    </select>
+    <insert id="batchInsertCompletedCompactions" parameterType="java.util.Map">
+        INSERT INTO COMPLETED_COMPACTIONS (CC_ID, CC_DATABASE, CC_TABLE, CC_PARTITION, CC_STATE, CC_TYPE, CC_WORKER_ID, CC_START, CC_END, CC_RUN_AS, CC_HIGHEST_TXN_ID, CC_META_INFO, CC_HADOOP_JOB_ID, CC_TBLPROPERTIES) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+                (${mapPlusId.COMPLETED_COMPACTIONS} + #{item.cc_id}, #{item.cc_database}, #{item.cc_table}, #{item.cc_partition}, #{item.cc_state}, #{item.cc_type}, #{item.cc_tblproperties}, #{item.cc_worker_id}, #{item.cc_start}, #{item.cc_end}, #{item.cc_run_as}, #{item.cc_highest_txn_id}, #{item.cc_hadoop_job_id})
+        </foreach>
+    </insert>
+    <delete id="rollbackCompletedCompactions" parameterType="java.util.Map">
+        DELETE FROM COMPLETED_COMPACTIONS WHERE CC_ID > ${mapPlusId.COMPLETED_COMPACTIONS}
+    </delete>
+
+    <!--WRITE_SET-->
+    <select id='getWriteSetRecords' resultType='com.q.hivetools.meta.WriteSet'>
+        <![CDATA[
+            SELECT * FROM WRITE_SET ORDER BY WS_TXNID
+        ]]>
+    </select>
+    <select id="getWriteSetMaxId" resultType="int">
+        <![CDATA[
+            SELECT 0 from dual
+        ]]>
+    </select>
+    <select id="getWriteSetMinId" resultType="int">
+        <![CDATA[
+            SELECT 0 from dual
+        ]]>
+    </select>
+    <insert id="batchInsertWriteSet" parameterType="java.util.Map">
+        INSERT INTO WRITE_SET (WS_DATABASE, WS_TABLE, WS_PARTITION, WS_TXNID, WS_COMMIT_ID, WS_OPERATION_TYPE) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.ws_database}, #{item.ws_table}, #{item.ws_partition}, #{item.ws_txnid}, #{item.ws_commit_id}, #{item.ws_operation_type})
+        </foreach>
+    </insert>
+    <delete id="rollbackWriteSet" parameterType="java.util.Map">
+        SELECT 0 from dual
     </delete>
 </mapper>

@@ -134,6 +134,9 @@ public class MetaDataMerge {
 		tables.add("DATABASE_PARAMS");
 		tables.add("DB_PRIVS");
 		tables.add("KEY_CONSTRAINTS");
+		tables.add("AUX_TABLE");
+		tables.add("COMPLETED_COMPACTIONS");
+		tables.add("WRITE_SET");
 
 		/* not merge
 		tables.add("ROLES");
@@ -141,6 +144,7 @@ public class MetaDataMerge {
 		tables.add("GLOBAL_PRIVS");
 		tables.add("DELEGATION_TOKENS");
 		tables.add("SEQUENCE_TABLE");
+		tables.add("VERSION");
 		*/
 
 		pagingProc.put("PARTITIONS", "");
