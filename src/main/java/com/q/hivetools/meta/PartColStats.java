@@ -13,8 +13,8 @@ public class PartColStats {
     private Long part_id;
     private Long long_low_value;
     private Long long_high_value;
-    private Double double_low_value;
     private Double double_high_value;
+    private Double double_low_value;
     private String big_decimal_low_value;
     private String big_decimal_high_value;
     private Long num_nulls;
@@ -100,20 +100,20 @@ public class PartColStats {
         return long_high_value;
     }
 
-    public void setDoubleLowValue(Double doubleLowValue_) {
-        double_low_value = doubleLowValue_;
-    }
-
-    public Double getDoubleLowValue() {
-        return double_low_value;
-    }
-
     public void setDoubleHighValue(Double doubleHighValue_) {
         double_high_value = doubleHighValue_;
     }
 
     public Double getDoubleHighValue() {
         return double_high_value;
+    }
+
+    public void setDoubleLowValue(Double doubleLowValue_) {
+        double_low_value = doubleLowValue_;
+    }
+
+    public Double getDoubleLowValue() {
+        return double_low_value;
     }
 
     public void setBigDecimalLowValue(String bigDecimalLowValue_) {

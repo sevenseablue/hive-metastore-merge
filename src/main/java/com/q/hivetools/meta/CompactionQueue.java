@@ -10,9 +10,12 @@ public class CompactionQueue {
     private String cq_partition;
     private String cq_state;
     private String cq_type;
+    private String cq_tblproperties;
     private String cq_worker_id;
     private Long cq_start;
     private String cq_run_as;
+    private Long cq_highest_txn_id;
+    private String cq_hadoop_job_id;
 
     public void CompactionQueue() {
     }
@@ -65,6 +68,14 @@ public class CompactionQueue {
         return cq_type;
     }
 
+    public void setCqTblproperties(String cqTblproperties_) {
+        cq_tblproperties = cqTblproperties_;
+    }
+
+    public String getCqTblproperties() {
+        return cq_tblproperties;
+    }
+
     public void setCqWorkerId(String cqWorkerId_) {
         cq_worker_id = cqWorkerId_;
     }
@@ -87,6 +98,22 @@ public class CompactionQueue {
 
     public String getCqRunAs() {
         return cq_run_as;
+    }
+
+    public void setCqHighestTxnId(Long cqHighestTxnId_) {
+        cq_highest_txn_id = cqHighestTxnId_;
+    }
+
+    public Long getCqHighestTxnId() {
+        return cq_highest_txn_id;
+    }
+
+    public void setCqHadoopJobId(String cqHadoopJobId_) {
+        cq_hadoop_job_id = cqHadoopJobId_;
+    }
+
+    public String getCqHadoopJobId() {
+        return cq_hadoop_job_id;
     }
 
 }

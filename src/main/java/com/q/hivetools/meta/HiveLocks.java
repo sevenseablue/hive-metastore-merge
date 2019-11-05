@@ -16,6 +16,10 @@ public class HiveLocks {
     private Long hl_acquired_at;
     private String hl_user;
     private String hl_host;
+    private Long hl_heartbeat_count;
+    private String hl_agent_info;
+    private Long hl_blockedby_ext_id;
+    private Long hl_blockedby_int_id;
 
     public void HiveLocks() {
     }
@@ -114,6 +118,38 @@ public class HiveLocks {
 
     public String getHlHost() {
         return hl_host;
+    }
+
+    public void setHlHeartbeatCount(Long hlHeartbeatCount_) {
+        hl_heartbeat_count = hlHeartbeatCount_;
+    }
+
+    public Long getHlHeartbeatCount() {
+        return hl_heartbeat_count;
+    }
+
+    public void setHlAgentInfo(String hlAgentInfo_) {
+        hl_agent_info = hlAgentInfo_;
+    }
+
+    public String getHlAgentInfo() {
+        return hl_agent_info;
+    }
+
+    public void setHlBlockedbyExtId(Long hlBlockedbyExtId_) {
+        hl_blockedby_ext_id = hlBlockedbyExtId_;
+    }
+
+    public Long getHlBlockedbyExtId() {
+        return hl_blockedby_ext_id;
+    }
+
+    public void setHlBlockedbyIntId(Long hlBlockedbyIntId_) {
+        hl_blockedby_int_id = hlBlockedbyIntId_;
+    }
+
+    public Long getHlBlockedbyIntId() {
+        return hl_blockedby_int_id;
     }
 
 }

@@ -62,15 +62,4 @@ public class Dbs {
         return owner_type;
     }
 
-    @Override
-    public String toString() {
-        return "Dbs{" +
-                "db_id=" + db_id +
-                ", desc='" + desc + '\'' +
-                ", db_location_uri='" + db_location_uri + '\'' +
-                ", name='" + name + '\'' +
-                ", owner_name='" + owner_name + '\'' +
-                ", owner_type='" + owner_type + '\'' +
-                '}';
-    }
 }

@@ -8,6 +8,7 @@ public class TxnComponents {
     private String tc_database;
     private String tc_table;
     private String tc_partition;
+    private String tc_operation_type;
 
     public void TxnComponents() {
     }
@@ -42,6 +43,14 @@ public class TxnComponents {
 
     public String getTcPartition() {
         return tc_partition;
+    }
+
+    public void setTcOperationType(String tcOperationType_) {
+        tc_operation_type = tcOperationType_;
+    }
+
+    public String getTcOperationType() {
+        return tc_operation_type;
     }
 
 }
