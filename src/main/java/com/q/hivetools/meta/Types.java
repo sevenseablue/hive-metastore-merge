@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -12,36 +11,36 @@ public class Types {
     public void Types() {
     }
 
-    public void setTypesId(Long typesId_) {
-        types_id = typesId_;
-    }
-
     public Long getTypesId() {
         return types_id;
     }
 
-    public void setTypeName(String typeName_) {
-        type_name = typeName_;
+    public void setTypesId(Long typesId_) {
+        types_id = typesId_;
     }
 
     public String getTypeName() {
         return type_name;
     }
 
-    public void setType1(String type1_) {
-        type1 = type1_;
+    public void setTypeName(String typeName_) {
+        type_name = typeName_;
     }
 
     public String getType1() {
         return type1;
     }
 
-    public void setType2(String type2_) {
-        type2 = type2_;
+    public void setType1(String type1_) {
+        type1 = type1_;
     }
 
     public String getType2() {
         return type2;
+    }
+
+    public void setType2(String type2_) {
+        type2 = type2_;
     }
 
 }

@@ -3,6 +3,7 @@ package com.q.hivetools.apps;
 import org.apache.commons.cli.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.api.ACLProvider;
 import org.apache.curator.framework.api.GetChildrenBuilder;
@@ -13,7 +14,6 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.ibatis.io.Resources;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.apache.curator.framework.CuratorFramework;
 import org.apache.ranger.binding.metastore.thrift.TUpdateMetadataRequest;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TMemoryBuffer;
@@ -32,59 +32,81 @@ import java.util.List;
  */
 
 class zkListener implements ConnectionStateListener {
-  public static final Log LOGGER = LogFactory.getLog(MetastoreChangelog.class);
+    public static final Log LOGGER = LogFactory.getLog(MetastoreChangelog.class);
 
-  @Override
-  public void stateChanged(CuratorFramework client, ConnectionState state) {
-    switch (state) {
-      case LOST:
-        LOGGER.error("DistributedLock lost session with zookeeper");
-        break;
-      case CONNECTED:
-        LOGGER.warn("DistributedLock connected with zookeeper");
-        break;
-      case RECONNECTED:
-        LOGGER.warn("DistributedLock reconnected with zookeeper");
-        break;
+    @Override
+    public void stateChanged(CuratorFramework client, ConnectionState state) {
+        switch (state) {
+            case LOST:
+                LOGGER.error("DistributedLock lost session with zookeeper");
+                break;
+            case CONNECTED:
+                LOGGER.warn("DistributedLock connected with zookeeper");
+                break;
+            case RECONNECTED:
+                LOGGER.warn("DistributedLock reconnected with zookeeper");
+                break;
+        }
     }
-  }
 }
 
 public class MetastoreChangelog {
-  private static final Logger LOGGER = Logger.getLogger(MetastoreChangelog.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(MetastoreChangelog.class.getName());
+    private final static String MAX_ID_FILE_NAME = "/maxid";
+    private final static String LOCK_RELATIVE_PATH = "/lock";
+    private final static ACLProvider zooKeeperAclProvider = new ACLProvider() {
+        List<ACL> nodeAcls = new ArrayList<ACL>();
 
-  protected static CuratorFramework zkClient;
-  private static zkListener listener = null;
-  private static String zkHost = "";
-  private static String zkPath = "";
-  private static String filte_database = "";
-  private static String filte_table = "";
-  private final static String MAX_ID_FILE_NAME = "/maxid";
-  private final static String LOCK_RELATIVE_PATH = "/lock";
+        @Override
+        public List<ACL> getDefaultAcl() {
+            if (UserGroupInformation.isSecurityEnabled()) {
+                // Read all to the world
+                nodeAcls.addAll(ZooDefs.Ids.READ_ACL_UNSAFE);
+                // Create/Delete/Write/Admin to the authenticated user
+                nodeAcls.add(new ACL(ZooDefs.Perms.ALL, ZooDefs.Ids.AUTH_IDS));
+            } else {
+                // ACLs for znodes on a non-kerberized cluster
+                // Create/Read/Delete/Write/Admin to the world
+                nodeAcls.addAll(ZooDefs.Ids.OPEN_ACL_UNSAFE);
+            }
+            return nodeAcls;
+        }
 
-  public static void main(String[] args) {
-    try {
-      PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
-    } catch (IOException e) {
-      e.printStackTrace();
+        @Override
+        public List<ACL> getAclForPath(String path) {
+            return getDefaultAcl();
+        }
+    };
+    protected static CuratorFramework zkClient;
+    private static zkListener listener = null;
+    private static String zkHost = "";
+    private static String zkPath = "";
+    private static String filte_database = "";
+    private static String filte_table = "";
+
+    public static void main(String[] args) {
+        try {
+            PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        cliCommond(args);
+
+        try {
+            setUpZooKeeperAuth();
+            getSingletonClient();
+
+            // deleteZNodeData();
+            listZNodeData();
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    cliCommond(args);
-
-    try {
-      setUpZooKeeperAuth();
-      getSingletonClient();
-
-      // deleteZNodeData();
-      listZNodeData();
-    } catch (IOException e) {
-      LOGGER.error(e.getMessage());
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  private static void setUpZooKeeperAuth() throws IOException {
+    private static void setUpZooKeeperAuth() throws IOException {
     /*
     if (UserGroupInformation.isSecurityEnabled()) {
       String principal = hiveConf.getVar(HiveConf.ConfVars.METASTORE_KERBEROS_PRINCIPAL);
@@ -99,219 +121,195 @@ public class MetastoreChangelog {
       Utils.setZookeeperClientKerberosJaasConfig(principal, keyTabFile);
     }
     */
-  }
-
-  private final static ACLProvider zooKeeperAclProvider = new ACLProvider() {
-    List<ACL> nodeAcls = new ArrayList<ACL>();
-
-    @Override
-    public List<ACL> getDefaultAcl() {
-      if (UserGroupInformation.isSecurityEnabled()) {
-        // Read all to the world
-        nodeAcls.addAll(ZooDefs.Ids.READ_ACL_UNSAFE);
-        // Create/Delete/Write/Admin to the authenticated user
-        nodeAcls.add(new ACL(ZooDefs.Perms.ALL, ZooDefs.Ids.AUTH_IDS));
-      } else {
-        // ACLs for znodes on a non-kerberized cluster
-        // Create/Read/Delete/Write/Admin to the world
-        nodeAcls.addAll(ZooDefs.Ids.OPEN_ACL_UNSAFE);
-      }
-      return nodeAcls;
     }
 
-    @Override
-    public List<ACL> getAclForPath(String path) {
-      return getDefaultAcl();
-    }
-  };
-
-  private static void getSingletonClient() throws Exception {
-    if (zkClient == null) {
-      synchronized (MetastoreChangelog.class) {
+    private static void getSingletonClient() throws Exception {
         if (zkClient == null) {
-          zkClient =
-              CuratorFrameworkFactory
-                  .builder()
-                  .connectString(zkHost)
+            synchronized (MetastoreChangelog.class) {
+                if (zkClient == null) {
+                    zkClient =
+                            CuratorFrameworkFactory
+                                    .builder()
+                                    .connectString(zkHost)
 //                  .aclProvider(zooKeeperAclProvider)
-                  .retryPolicy(
-                      new RetryNTimes(3, 3000))
-                  .build();
-          listener = new zkListener();
-          zkClient.getConnectionStateListenable().addListener(listener);
-          zkClient.start();
-        }
-      }
-    }
-  }
-
-  private static void listZNodeData() {
-    if(LOGGER.isDebugEnabled()) {
-      LOGGER.debug("==> writeZNodeData()");
-    }
-
-    try {
-      GetChildrenBuilder childrenBuilder = zkClient.getChildren();
-      List<String> children = childrenBuilder.forPath(zkPath);
-
-      int index = 0;
-      for (String child : children) {
-        child = "/" + child;
-        if (child.equalsIgnoreCase(LOCK_RELATIVE_PATH)
-            || child.equalsIgnoreCase(MAX_ID_FILE_NAME)) {
-          // do not delete maxid and lock file
-          continue;
-        }
-        String childPath = zkPath + child;
-        Stat stat = zkClient.checkExists().forPath(childPath);
-        if (null != stat ) {
-          byte[] bytes = zkClient.getData().forPath(childPath);
-          TUpdateMetadataRequest tUpdateMetadataRequest = new TUpdateMetadataRequest();
-          TMemoryBuffer tmb = new TMemoryBuffer(8);
-          tmb.write(bytes);
-          TProtocol tp = new org.apache.thrift.protocol.TJSONProtocol(tmb);
-          tUpdateMetadataRequest.read(tp);
-
-          if (tUpdateMetadataRequest.getDeltas() == null) {
-            continue;
-          } else {
-            for (int i = 0; i < tUpdateMetadataRequest.getDeltas().size(); i++) {
-              String dbName = tUpdateMetadataRequest.getDeltas().get(i).getDatabase();
-              String tabName = tUpdateMetadataRequest.getDeltas().get(i).getTable();
-
-              if (!filte_database.isEmpty() && !dbName.contains(filte_database)) {
-                continue;
-              }
-              if (!filte_table.isEmpty() && !tabName.contains(filte_table)) {
-                continue;
-              }
-              LOGGER.debug(" --- " + childPath + " --- ");
-              LOGGER.debug(tUpdateMetadataRequest.toString());
-//            LOGGER.debug(tUpdateMetadataRequest.getDeltas().get(i).toString());
-              break;
+                                    .retryPolicy(
+                                            new RetryNTimes(3, 3000))
+                                    .build();
+                    listener = new zkListener();
+                    zkClient.getConnectionStateListenable().addListener(listener);
+                    zkClient.start();
+                }
             }
-          }
         }
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
     }
 
-    if(LOGGER.isDebugEnabled()) {
-      LOGGER.debug("<== writeZNodeData()");
-    }
-  }
-
-  private static void deleteZNodeData() {
-    if(LOGGER.isDebugEnabled()) {
-      LOGGER.debug("==> writeZNodeData()");
-    }
-
-    Date now = new Date();
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(now);
-    calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 3);
-    Long day3Time = calendar.getTime().getTime();
-
-    int deleted = Integer.parseInt(filte_table);
-
-    try {
-      GetChildrenBuilder childrenBuilder = zkClient.getChildren();
-      List<String> children = childrenBuilder.forPath(zkPath);
-
-      for (String child : children) {
-        if (deleted -- <= 0) {
-          return;
+    private static void listZNodeData() {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("==> writeZNodeData()");
         }
-        child = "/" + child;
-        if (child.equalsIgnoreCase(LOCK_RELATIVE_PATH)
-            || child.equalsIgnoreCase(MAX_ID_FILE_NAME)) {
-          // do not delete maxid and lock file
-          continue;
+
+        try {
+            GetChildrenBuilder childrenBuilder = zkClient.getChildren();
+            List<String> children = childrenBuilder.forPath(zkPath);
+
+            int index = 0;
+            for (String child : children) {
+                child = "/" + child;
+                if (child.equalsIgnoreCase(LOCK_RELATIVE_PATH)
+                        || child.equalsIgnoreCase(MAX_ID_FILE_NAME)) {
+                    // do not delete maxid and lock file
+                    continue;
+                }
+                String childPath = zkPath + child;
+                Stat stat = zkClient.checkExists().forPath(childPath);
+                if (null != stat) {
+                    byte[] bytes = zkClient.getData().forPath(childPath);
+                    TUpdateMetadataRequest tUpdateMetadataRequest = new TUpdateMetadataRequest();
+                    TMemoryBuffer tmb = new TMemoryBuffer(8);
+                    tmb.write(bytes);
+                    TProtocol tp = new org.apache.thrift.protocol.TJSONProtocol(tmb);
+                    tUpdateMetadataRequest.read(tp);
+
+                    if (tUpdateMetadataRequest.getDeltas() == null) {
+                        continue;
+                    } else {
+                        for (int i = 0; i < tUpdateMetadataRequest.getDeltas().size(); i++) {
+                            String dbName = tUpdateMetadataRequest.getDeltas().get(i).getDatabase();
+                            String tabName = tUpdateMetadataRequest.getDeltas().get(i).getTable();
+
+                            if (!filte_database.isEmpty() && !dbName.contains(filte_database)) {
+                                continue;
+                            }
+                            if (!filte_table.isEmpty() && !tabName.contains(filte_table)) {
+                                continue;
+                            }
+                            LOGGER.debug(" --- " + childPath + " --- ");
+                            LOGGER.debug(tUpdateMetadataRequest.toString());
+//            LOGGER.debug(tUpdateMetadataRequest.getDeltas().get(i).toString());
+                            break;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
         }
-        String childPath = zkPath + child;
-        Stat stat = zkClient.checkExists().forPath(childPath);
-        if (null != stat ) {
-          if (stat.getMtime() < day3Time) {
-            LOGGER.debug("delete " + childPath);
-            zkClient.delete().forPath(childPath);
-          }
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("<== writeZNodeData()");
         }
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
     }
 
-    if(LOGGER.isDebugEnabled()) {
-      LOGGER.debug("<== writeZNodeData()");
-    }
-  }
+    private static void deleteZNodeData() {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("==> writeZNodeData()");
+        }
 
-  static private void cliCommond(String[] args) {
-    Options opt = new Options();
-    opt.addOption("h", "help",  false, "打印命令行帮助");
-    opt.addOption(OptionBuilder.withLongOpt("z")
-        .withDescription("zookeeper服务器地址")
-        .withValueSeparator('=')
-        .hasArg()
-        .create());
-    opt.addOption(OptionBuilder.withLongOpt("c")
-        .withDescription("zookeeper 中 MetastoreChangelog 路径")
-        .withValueSeparator('=')
-        .hasArg()
-        .create());
-    opt.addOption(OptionBuilder.withLongOpt("d")
-        .withDescription("database 名称")
-        .withValueSeparator('=')
-        .hasOptionalArg()
-        .create());
-    opt.addOption(OptionBuilder.withLongOpt("t")
-        .withDescription("table 名称")
-        .withValueSeparator('=')
-        .hasOptionalArg()
-        .create());
+        Date now = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 3);
+        Long day3Time = calendar.getTime().getTime();
 
-    String formatstr = "MetastoreChangelog --z=<arg> --c=<arg> --d=<arg> --t=<arg> [-h/--help]";
+        int deleted = Integer.parseInt(filte_table);
 
-    HelpFormatter formatter = new HelpFormatter();
-    CommandLineParser parser = new PosixParser();
-    CommandLine cl = null;
-    try {
-      // 处理Options和参数
-      cl = parser.parse(opt, args);
-    } catch (ParseException e) {
-      formatter.printHelp(formatstr, opt); // 如果发生异常，则打印出帮助信息
-    }
-    // 如果包含有-h或--help，则打印出帮助信息
-    if (cl.hasOption("h")) {
-      HelpFormatter hf = new HelpFormatter();
-      hf.printHelp(formatstr, "", opt, "");
-      System.exit(1);
-    }
-    if( cl.hasOption("z") ) {
-      zkHost = cl.getOptionValue("z");
-    } else {
-      System.out.println("missing --z arg");
-      HelpFormatter hf = new HelpFormatter();
-      hf.printHelp(formatstr, "", opt, "");
-      System.exit(1);
-    }
-    if( cl.hasOption("c") ) {
-      zkPath = cl.getOptionValue("c");
-    } else {
-      System.out.println("missing --c arg");
-      HelpFormatter hf = new HelpFormatter();
-      hf.printHelp(formatstr, "", opt, "");
-      System.exit(1);
-    }
-    if( cl.hasOption("d") ) {
-      filte_database = cl.getOptionValue("d");
+        try {
+            GetChildrenBuilder childrenBuilder = zkClient.getChildren();
+            List<String> children = childrenBuilder.forPath(zkPath);
+
+            for (String child : children) {
+                if (deleted-- <= 0) {
+                    return;
+                }
+                child = "/" + child;
+                if (child.equalsIgnoreCase(LOCK_RELATIVE_PATH)
+                        || child.equalsIgnoreCase(MAX_ID_FILE_NAME)) {
+                    // do not delete maxid and lock file
+                    continue;
+                }
+                String childPath = zkPath + child;
+                Stat stat = zkClient.checkExists().forPath(childPath);
+                if (null != stat) {
+                    if (stat.getMtime() < day3Time) {
+                        LOGGER.debug("delete " + childPath);
+                        zkClient.delete().forPath(childPath);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+        }
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("<== writeZNodeData()");
+        }
     }
 
-    if( cl.hasOption("t") ) {
-      filte_table = cl.getOptionValue("t");
+    static private void cliCommond(String[] args) {
+        Options opt = new Options();
+        opt.addOption("h", "help", false, "打印命令行帮助");
+        opt.addOption(OptionBuilder.withLongOpt("z")
+                .withDescription("zookeeper服务器地址")
+                .withValueSeparator('=')
+                .hasArg()
+                .create());
+        opt.addOption(OptionBuilder.withLongOpt("c")
+                .withDescription("zookeeper 中 MetastoreChangelog 路径")
+                .withValueSeparator('=')
+                .hasArg()
+                .create());
+        opt.addOption(OptionBuilder.withLongOpt("d")
+                .withDescription("database 名称")
+                .withValueSeparator('=')
+                .hasOptionalArg()
+                .create());
+        opt.addOption(OptionBuilder.withLongOpt("t")
+                .withDescription("table 名称")
+                .withValueSeparator('=')
+                .hasOptionalArg()
+                .create());
+
+        String formatstr = "MetastoreChangelog --z=<arg> --c=<arg> --d=<arg> --t=<arg> [-h/--help]";
+
+        HelpFormatter formatter = new HelpFormatter();
+        CommandLineParser parser = new PosixParser();
+        CommandLine cl = null;
+        try {
+            // 处理Options和参数
+            cl = parser.parse(opt, args);
+        } catch (ParseException e) {
+            formatter.printHelp(formatstr, opt); // 如果发生异常，则打印出帮助信息
+        }
+        // 如果包含有-h或--help，则打印出帮助信息
+        if (cl.hasOption("h")) {
+            HelpFormatter hf = new HelpFormatter();
+            hf.printHelp(formatstr, "", opt, "");
+            System.exit(1);
+        }
+        if (cl.hasOption("z")) {
+            zkHost = cl.getOptionValue("z");
+        } else {
+            System.out.println("missing --z arg");
+            HelpFormatter hf = new HelpFormatter();
+            hf.printHelp(formatstr, "", opt, "");
+            System.exit(1);
+        }
+        if (cl.hasOption("c")) {
+            zkPath = cl.getOptionValue("c");
+        } else {
+            System.out.println("missing --c arg");
+            HelpFormatter hf = new HelpFormatter();
+            hf.printHelp(formatstr, "", opt, "");
+            System.exit(1);
+        }
+        if (cl.hasOption("d")) {
+            filte_database = cl.getOptionValue("d");
+        }
+
+        if (cl.hasOption("t")) {
+            filte_table = cl.getOptionValue("t");
+        }
     }
-  }
 }

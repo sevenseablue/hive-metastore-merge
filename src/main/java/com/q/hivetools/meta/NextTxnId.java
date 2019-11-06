@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -9,12 +8,12 @@ public class NextTxnId {
     public void NextTxnId() {
     }
 
-    public void setNtxnNext(Long ntxnNext_) {
-        ntxn_next = ntxnNext_;
-    }
-
     public Long getNtxnNext() {
         return ntxn_next;
+    }
+
+    public void setNtxnNext(Long ntxnNext_) {
+        ntxn_next = ntxnNext_;
     }
 
 }

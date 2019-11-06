@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -11,28 +10,28 @@ public class BucketingCols {
     public void BucketingCols() {
     }
 
-    public void setSdId(Long sdId_) {
-        sd_id = sdId_;
-    }
-
     public Long getSdId() {
         return sd_id;
     }
 
-    public void setBucketColName(String bucketColName_) {
-        bucket_col_name = bucketColName_;
+    public void setSdId(Long sdId_) {
+        sd_id = sdId_;
     }
 
     public String getBucketColName() {
         return bucket_col_name;
     }
 
-    public void setIntegerIdx(Long integerIdx_) {
-        integer_idx = integerIdx_;
+    public void setBucketColName(String bucketColName_) {
+        bucket_col_name = bucketColName_;
     }
 
     public Long getIntegerIdx() {
         return integer_idx;
+    }
+
+    public void setIntegerIdx(Long integerIdx_) {
+        integer_idx = integerIdx_;
     }
 
 }

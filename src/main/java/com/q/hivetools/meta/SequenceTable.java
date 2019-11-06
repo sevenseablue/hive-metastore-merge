@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -10,20 +9,20 @@ public class SequenceTable {
     public void SequenceTable() {
     }
 
-    public void setSequenceName(String sequenceName_) {
-        sequence_name = sequenceName_;
-    }
-
     public String getSequenceName() {
         return sequence_name;
     }
 
-    public void setNextVal(Long nextVal_) {
-        next_val = nextVal_;
+    public void setSequenceName(String sequenceName_) {
+        sequence_name = sequenceName_;
     }
 
     public Long getNextVal() {
         return next_val;
+    }
+
+    public void setNextVal(Long nextVal_) {
+        next_val = nextVal_;
     }
 
 }

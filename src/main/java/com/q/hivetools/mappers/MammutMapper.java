@@ -12,40 +12,40 @@ import java.util.List;
 
 
 public class MammutMapper {
-  private static final Logger logger = Logger.getLogger(MammutMapper.class.getName());
-  private String sourceName;
+    private static final Logger logger = Logger.getLogger(MammutMapper.class.getName());
+    private String sourceName;
 
-  public MammutMapper(String sourceName) {
-    this.sourceName = sourceName;
-  }
-
-  public List<PfHiveSite> getPfHivesite() {
-    logger.info("getPfHivesite >>>>>> ");
-    List<PfHiveSite> list = null;
-    SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory(this.sourceName).openSession();
-    try {
-      String statement = "com.q.hivetools.mappers.MammutMapper.getPfHivesite";
-      list = sqlSession.selectList(statement);
-    } catch (Exception e) {
-      e.printStackTrace();
-      logger.error(e.getMessage());
-    } finally {
-      sqlSession.close();
+    public MammutMapper(String sourceName) {
+        this.sourceName = sourceName;
     }
 
+    public List<PfHiveSite> getPfHivesite() {
+        logger.info("getPfHivesite >>>>>> ");
+        List<PfHiveSite> list = null;
+        SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory(this.sourceName).openSession();
+        try {
+            String statement = "com.q.hivetools.mappers.MammutMapper.getPfHivesite";
+            list = sqlSession.selectList(statement);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        } finally {
+            sqlSession.close();
+        }
 
-    for (PfHiveSite pfHiveSite : list) {
-      Configuration conf = new Configuration(true);
-      InputStream inputStream = new ByteArrayInputStream(pfHiveSite.xml.getBytes());
-      conf.addResource(inputStream);
 
-      pfHiveSite.connectionURL = conf.get("javax.jdo.option.ConnectionURL");
-      pfHiveSite.connectionUserName = conf.get("javax.jdo.option.ConnectionUserName");
-      pfHiveSite.connectionPassword = conf.get("javax.jdo.option.ConnectionPassword");
+        for (PfHiveSite pfHiveSite : list) {
+            Configuration conf = new Configuration(true);
+            InputStream inputStream = new ByteArrayInputStream(pfHiveSite.xml.getBytes());
+            conf.addResource(inputStream);
 
-      logger.info(pfHiveSite.toString());
+            pfHiveSite.connectionURL = conf.get("javax.jdo.option.ConnectionURL");
+            pfHiveSite.connectionUserName = conf.get("javax.jdo.option.ConnectionUserName");
+            pfHiveSite.connectionPassword = conf.get("javax.jdo.option.ConnectionPassword");
+
+            logger.info(pfHiveSite.toString());
+        }
+        logger.info("getPfHivesite <<<<<<<< ");
+        return list;
     }
-    logger.info("getPfHivesite <<<<<<<< ");
-    return list;
-  }
 }

@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -13,44 +12,44 @@ public class TypeFields {
     public void TypeFields() {
     }
 
-    public void setTypeName(Long typeName_) {
-        type_name = typeName_;
-    }
-
     public Long getTypeName() {
         return type_name;
     }
 
-    public void setComment(String comment_) {
-        comment = comment_;
+    public void setTypeName(Long typeName_) {
+        type_name = typeName_;
     }
 
     public String getComment() {
         return comment;
     }
 
-    public void setFieldName(String fieldName_) {
-        field_name = fieldName_;
+    public void setComment(String comment_) {
+        comment = comment_;
     }
 
     public String getFieldName() {
         return field_name;
     }
 
-    public void setFieldType(String fieldType_) {
-        field_type = fieldType_;
+    public void setFieldName(String fieldName_) {
+        field_name = fieldName_;
     }
 
     public String getFieldType() {
         return field_type;
     }
 
-    public void setIntegerIdx(Long integerIdx_) {
-        integer_idx = integerIdx_;
+    public void setFieldType(String fieldType_) {
+        field_type = fieldType_;
     }
 
     public Long getIntegerIdx() {
         return integer_idx;
+    }
+
+    public void setIntegerIdx(Long integerIdx_) {
+        integer_idx = integerIdx_;
     }
 
 }

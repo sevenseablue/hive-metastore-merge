@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -9,12 +8,12 @@ public class NextCompactionQueueId {
     public void NextCompactionQueueId() {
     }
 
-    public void setNcqNext(Long ncqNext_) {
-        ncq_next = ncqNext_;
-    }
-
     public Long getNcqNext() {
         return ncq_next;
+    }
+
+    public void setNcqNext(Long ncqNext_) {
+        ncq_next = ncqNext_;
     }
 
 }

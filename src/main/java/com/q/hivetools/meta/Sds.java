@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -17,76 +16,76 @@ public class Sds {
     public void Sds() {
     }
 
-    public void setSdId(Long sdId_) {
-        sd_id = sdId_;
-    }
-
     public Long getSdId() {
         return sd_id;
     }
 
-    public void setCdId(Long cdId_) {
-        cd_id = cdId_;
+    public void setSdId(Long sdId_) {
+        sd_id = sdId_;
     }
 
     public Long getCdId() {
         return cd_id;
     }
 
-    public void setInputFormat(String inputFormat_) {
-        input_format = inputFormat_;
+    public void setCdId(Long cdId_) {
+        cd_id = cdId_;
     }
 
     public String getInputFormat() {
         return input_format;
     }
 
-    public void setIsCompressed(Boolean isCompressed_) {
-        is_compressed = isCompressed_;
+    public void setInputFormat(String inputFormat_) {
+        input_format = inputFormat_;
     }
 
     public Boolean getIsCompressed() {
         return is_compressed;
     }
 
-    public void setIsStoredassubdirectories(Boolean isStoredassubdirectories_) {
-        is_storedassubdirectories = isStoredassubdirectories_;
+    public void setIsCompressed(Boolean isCompressed_) {
+        is_compressed = isCompressed_;
     }
 
     public Boolean getIsStoredassubdirectories() {
         return is_storedassubdirectories;
     }
 
-    public void setLocation(String location_) {
-        location = location_;
+    public void setIsStoredassubdirectories(Boolean isStoredassubdirectories_) {
+        is_storedassubdirectories = isStoredassubdirectories_;
     }
 
     public String getLocation() {
         return location;
     }
 
-    public void setNumBuckets(Long numBuckets_) {
-        num_buckets = numBuckets_;
+    public void setLocation(String location_) {
+        location = location_;
     }
 
     public Long getNumBuckets() {
         return num_buckets;
     }
 
-    public void setOutputFormat(String outputFormat_) {
-        output_format = outputFormat_;
+    public void setNumBuckets(Long numBuckets_) {
+        num_buckets = numBuckets_;
     }
 
     public String getOutputFormat() {
         return output_format;
     }
 
-    public void setSerdeId(Long serdeId_) {
-        serde_id = serdeId_;
+    public void setOutputFormat(String outputFormat_) {
+        output_format = outputFormat_;
     }
 
     public Long getSerdeId() {
         return serde_id;
+    }
+
+    public void setSerdeId(Long serdeId_) {
+        serde_id = serdeId_;
     }
 
 }

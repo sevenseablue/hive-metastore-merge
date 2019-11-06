@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -13,44 +12,44 @@ public class PartitionKeys {
     public void PartitionKeys() {
     }
 
-    public void setTblId(Long tblId_) {
-        tbl_id = tblId_;
-    }
-
     public Long getTblId() {
         return tbl_id;
     }
 
-    public void setPkeyComment(String pkeyComment_) {
-        pkey_comment = pkeyComment_;
+    public void setTblId(Long tblId_) {
+        tbl_id = tblId_;
     }
 
     public String getPkeyComment() {
         return pkey_comment;
     }
 
-    public void setPkeyName(String pkeyName_) {
-        pkey_name = pkeyName_;
+    public void setPkeyComment(String pkeyComment_) {
+        pkey_comment = pkeyComment_;
     }
 
     public String getPkeyName() {
         return pkey_name;
     }
 
-    public void setPkeyType(String pkeyType_) {
-        pkey_type = pkeyType_;
+    public void setPkeyName(String pkeyName_) {
+        pkey_name = pkeyName_;
     }
 
     public String getPkeyType() {
         return pkey_type;
     }
 
-    public void setIntegerIdx(Long integerIdx_) {
-        integer_idx = integerIdx_;
+    public void setPkeyType(String pkeyType_) {
+        pkey_type = pkeyType_;
     }
 
     public Long getIntegerIdx() {
         return integer_idx;
+    }
+
+    public void setIntegerIdx(Long integerIdx_) {
+        integer_idx = integerIdx_;
     }
 
 }

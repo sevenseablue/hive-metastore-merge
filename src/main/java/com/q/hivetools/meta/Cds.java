@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -9,12 +8,12 @@ public class Cds {
     public void Cds() {
     }
 
-    public void setCdId(Long cdId_) {
-        cd_id = cdId_;
-    }
-
     public Long getCdId() {
         return cd_id;
+    }
+
+    public void setCdId(Long cdId_) {
+        cd_id = cdId_;
     }
 
 }

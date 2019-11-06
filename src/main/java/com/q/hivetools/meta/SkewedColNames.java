@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -11,28 +10,28 @@ public class SkewedColNames {
     public void SkewedColNames() {
     }
 
-    public void setSdId(Long sdId_) {
-        sd_id = sdId_;
-    }
-
     public Long getSdId() {
         return sd_id;
     }
 
-    public void setSkewedColName(String skewedColName_) {
-        skewed_col_name = skewedColName_;
+    public void setSdId(Long sdId_) {
+        sd_id = sdId_;
     }
 
     public String getSkewedColName() {
         return skewed_col_name;
     }
 
-    public void setIntegerIdx(Long integerIdx_) {
-        integer_idx = integerIdx_;
+    public void setSkewedColName(String skewedColName_) {
+        skewed_col_name = skewedColName_;
     }
 
     public Long getIntegerIdx() {
         return integer_idx;
+    }
+
+    public void setIntegerIdx(Long integerIdx_) {
+        integer_idx = integerIdx_;
     }
 
 }

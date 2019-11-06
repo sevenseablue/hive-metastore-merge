@@ -8,13 +8,11 @@ import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
 import com.alibaba.druid.sql.ast.statement.SQLTableElement;
 import com.alibaba.druid.sql.dialect.postgresql.visitor.PGSchemaStatVisitor;
 import com.alibaba.druid.util.JdbcConstants;
+import com.q.hivetools.service.SchemaUtils;
 import com.sun.codemodel.*;
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,183 +23,121 @@ import java.util.regex.Pattern;
  * Created by hzliuxun on 16/10/20.
  */
 public class SchemaToMetaBeanPg {
-	private static final Logger logger = Logger.getLogger(SchemaToMetaBeanPg.class.getName());
+    private static final Logger logger = Logger.getLogger(SchemaToMetaBeanPg.class.getName());
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
+        String fileContext = SchemaUtils.readSchemaFile(System.getProperty("user.dir") + "/src/main/resources/hive-schema-2.3.0.postgres.sql");
+        List<String> createStatement = new ArrayList<>();
+        String regex = "CREATE TABLE(\\d+)/(\\d+)ENGINE=InnoDB DEFAULT CHARSET=latin1;";
+        regex = "CREATE TABLE[^;]+\\);";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(fileContext);
+        while (matcher.find()) {
+            String statement = matcher.group();
+            createStatement.add(statement);
+            schemaToJavaBean(statement);
+        }
+    }
 
-		String fileContext = readSchemaFile(System.getProperty("user.dir") + "/src/main/resources/hive-schema-2.3.0.postgres.sql");
-
-		List<String> createStatement = new ArrayList<>();
-
-		String regex = "CREATE TABLE(\\d+)/(\\d+)ENGINE=InnoDB DEFAULT CHARSET=latin1;";
-
-		regex = "CREATE TABLE[^;]+\\);";
-
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(fileContext);
-		while (matcher.find()) {
-			String statement  = matcher.group();
-			createStatement.add(statement);
-			schemaToJavaBean(statement);
-		}
-	}
-
-	static String readSchemaFile(String fileName) {
-		File file = new File(fileName);
-		BufferedReader reader = null;
-		StringBuffer sbFileContext = new StringBuffer("");
-		try {
-			reader = new BufferedReader(new FileReader(file));
-			String tempString = null;
-			while ((tempString = reader.readLine()) != null) {
-				sbFileContext.append(tempString);
-			}
-			reader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e1) {
-				}
-			}
-		}
-
-		return sbFileContext.toString();
-	}
-
-	static public void schemaToJavaBean(String statement) {
-		try {
-			String result = SQLUtils.format(statement, JdbcConstants.POSTGRESQL);
+    static public void schemaToJavaBean(String statement) {
+        try {
+            String result = SQLUtils.format(statement, JdbcConstants.POSTGRESQL);
 //			logger.info(result);
-			List<SQLStatement> stmtList = SQLUtils.parseStatements(statement, JdbcConstants.POSTGRESQL);
-			for (int i = 0; i < stmtList.size(); i++) {
-				SQLStatement sqlStatement = stmtList.get(i);
+            List<SQLStatement> stmtList = SQLUtils.parseStatements(statement, JdbcConstants.POSTGRESQL);
+            for (int i = 0; i < stmtList.size(); i++) {
+                SQLStatement sqlStatement = stmtList.get(i);
 
-				PGSchemaStatVisitor visitor = new PGSchemaStatVisitor();
-				sqlStatement.accept(visitor);
+                PGSchemaStatVisitor visitor = new PGSchemaStatVisitor();
+                sqlStatement.accept(visitor);
 
-				SQLCreateTableStatement sqlCreateTableStatement = (SQLCreateTableStatement)sqlStatement;
+                SQLCreateTableStatement sqlCreateTableStatement = (SQLCreateTableStatement) sqlStatement;
 
-				String tableName = sqlCreateTableStatement.getTableSource().toString().toUpperCase().replaceAll("`|\"", "");
-				tableName = formatTableColumnName(tableName, true);
+                String tableName = sqlCreateTableStatement.getTableSource().toString().toUpperCase().replaceAll("`|\"", "");
+                tableName = SchemaUtils.formatTableColumnName(tableName, true);
 
-				JCodeModel jCodeModel = new JCodeModel();
-				File destDir = new File(System.getProperty("user.dir") + "/src/main/java/");
-				JPackage jPackage = jCodeModel._package("com.q.hivetools.meta");
-				JDefinedClass jDefinedClass = jPackage._class(JMod.PUBLIC, tableName, ClassType.CLASS);
+                JCodeModel jCodeModel = new JCodeModel();
+                File destDir = new File(System.getProperty("user.dir") + "/src/main/java/");
+                JPackage jPackage = jCodeModel._package("com.q.hivetools.meta");
+                JDefinedClass jDefinedClass = jPackage._class(JMod.PUBLIC, tableName, ClassType.CLASS);
 
-				// init 方法
-				JMethod initMethod = jDefinedClass.method(JMod.PUBLIC, jCodeModel.VOID, tableName);
+                // init 方法
+                JMethod initMethod = jDefinedClass.method(JMod.PUBLIC, jCodeModel.VOID, tableName);
 
-				ArrayList<SQLTableElement> tableElementList = (ArrayList<SQLTableElement>)sqlCreateTableStatement.getTableElementList();
-				for (SQLTableElement element : tableElementList) {
-					if (!(element instanceof SQLColumnDefinition)) {
-						continue;
-					}
+                ArrayList<SQLTableElement> tableElementList = (ArrayList<SQLTableElement>) sqlCreateTableStatement.getTableElementList();
+                for (SQLTableElement element : tableElementList) {
+                    if (!(element instanceof SQLColumnDefinition)) {
+                        continue;
+                    }
 
-					String eleName = ((SQLColumnDefinition)element).getName().toString().replaceAll("`|\"", "").toLowerCase();
-					String colName = formatTableColumnName(eleName, false);
+                    String eleName = ((SQLColumnDefinition) element).getName().toString().replaceAll("`|\"", "").toLowerCase();
+                    String colName = SchemaUtils.formatTableColumnName(eleName, false);
 //					System.out.println(eleName+"\t"+colName);
-					String ColName = formatTableColumnName(eleName, true);
-					SQLDataType colDataType = ((SQLColumnDefinition)element).getDataType();
+                    String ColName = SchemaUtils.formatTableColumnName(eleName, true);
+                    SQLDataType colDataType = ((SQLColumnDefinition) element).getDataType();
 
-					Class dataTypeClass = null;
-					String typeNameLower = colDataType.getName().toLowerCase();
-					System.out.println(typeNameLower);
-					if (true == typeNameLower.equals("string")
-							|| true == typeNameLower.equals("varchar")
-							|| true == typeNameLower.equals("mediumtext")
-							|| true == typeNameLower.equals("longtext")
-							|| true == typeNameLower.equals("text")
-							|| true == typeNameLower.equals("char")
-							|| true == typeNameLower.startsWith("character varying")
-					) {
+                    Class dataTypeClass = null;
+                    String typeNameLower = colDataType.getName().toLowerCase();
+                    System.out.println(typeNameLower);
+                    if (true == typeNameLower.equals("string")
+                            || true == typeNameLower.equals("varchar")
+                            || true == typeNameLower.equals("mediumtext")
+                            || true == typeNameLower.equals("longtext")
+                            || true == typeNameLower.equals("text")
+                            || true == typeNameLower.equals("char")
+                            || true == typeNameLower.startsWith("character varying")
+                    ) {
 //						jPrimitiveType = jCodeModel.BYTE;;//new JPrimitiveType(jCodeModel, "string", String.class);
-						dataTypeClass = String.class;
-					} else if(true == typeNameLower.equals("blob")) {
-						dataTypeClass = Blob.class;
-					} else if(true == typeNameLower.equals("int")
-							|| true == typeNameLower.equals("integer")
-							|| true == typeNameLower.equals("serial")
-					) {
-						dataTypeClass = Long.class;
-					} else if(true == typeNameLower.equals("tinyint")
-							|| true == typeNameLower.equals("mediumint")
-							|| true == typeNameLower.equals("smallint")) {
-						dataTypeClass = Integer.class;
-					} else if(true == typeNameLower.equals("bit")
-							|| true == typeNameLower.equals("boolean")
-					) {
-						dataTypeClass = Boolean.class;
-					} else if (true == typeNameLower.equals("bigint")) {
-						dataTypeClass = Long.class;
-					} else if(true == typeNameLower.equals("float")) {
-						dataTypeClass = Float.class;
-					} else if(true == typeNameLower.equals("double")
-							|| true == typeNameLower.startsWith("double precision")
-					) {
-						dataTypeClass = Double.class;
-					} else {
-						System.out.println(typeNameLower);
-						System.out.println("unknown data type : " + colDataType.toString());
-						continue;
-					}
+                        dataTypeClass = String.class;
+                    } else if (true == typeNameLower.equals("blob")) {
+                        dataTypeClass = Blob.class;
+                    } else if (true == typeNameLower.equals("int")
+                            || true == typeNameLower.equals("integer")
+                            || true == typeNameLower.equals("serial")
+                    ) {
+                        dataTypeClass = Long.class;
+                    } else if (true == typeNameLower.equals("tinyint")
+                            || true == typeNameLower.equals("mediumint")
+                            || true == typeNameLower.equals("smallint")) {
+                        dataTypeClass = Integer.class;
+                    } else if (true == typeNameLower.equals("bit")
+                            || true == typeNameLower.equals("boolean")
+                    ) {
+                        dataTypeClass = Boolean.class;
+                    } else if (true == typeNameLower.equals("bigint")) {
+                        dataTypeClass = Long.class;
+                    } else if (true == typeNameLower.equals("float")) {
+                        dataTypeClass = Float.class;
+                    } else if (true == typeNameLower.equals("double")
+                            || true == typeNameLower.startsWith("double precision")
+                    ) {
+                        dataTypeClass = Double.class;
+                    } else {
+                        System.out.println(typeNameLower);
+                        System.out.println("unknown data type : " + colDataType.toString());
+                        continue;
+                    }
 
-					// 字段定义
-					JFieldVar jFieldVar = jDefinedClass.field(JMod.PRIVATE, dataTypeClass, eleName);
+                    // 字段定义
+                    JFieldVar jFieldVar = jDefinedClass.field(JMod.PRIVATE, dataTypeClass, eleName);
 
-					// set方法
-					JMethod setMethod = jDefinedClass.method(JMod.PUBLIC, jCodeModel.VOID, "set" + ColName);
-					setMethod.param(dataTypeClass, colName+"_");
-					JBlock setBlock = setMethod.body();
-					JFieldRef setFieldRef = JExpr.ref(colName+"_");
-					setBlock.assign(jFieldVar, setFieldRef);
+                    // set方法
+                    JMethod setMethod = jDefinedClass.method(JMod.PUBLIC, jCodeModel.VOID, "set" + ColName);
+                    setMethod.param(dataTypeClass, colName + "_");
+                    JBlock setBlock = setMethod.body();
+                    JFieldRef setFieldRef = JExpr.ref(colName + "_");
+                    setBlock.assign(jFieldVar, setFieldRef);
 
-					// get方法
-					JMethod getMethod = jDefinedClass.method(JMod.PUBLIC, dataTypeClass, "get" + ColName);
-					JBlock getBlock = getMethod.body();
-					JFieldRef getFieldRef = JExpr.ref(eleName);
-					getBlock._return(getFieldRef);
-				}
-				jCodeModel.build(destDir);
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
+                    // get方法
+                    JMethod getMethod = jDefinedClass.method(JMod.PUBLIC, dataTypeClass, "get" + ColName);
+                    JBlock getBlock = getMethod.body();
+                    JFieldRef getFieldRef = JExpr.ref(eleName);
+                    getBlock._return(getFieldRef);
+                }
+                jCodeModel.build(destDir);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
-	static public String formatTableColumnName(String name, boolean firstUpper) {
-		// 格式化字段名
-		String[] names = name.split("_");
-		String newName = "";
-		int numNames = names.length;
-
-		if (numNames < 2) {
-			if (false == firstUpper) {
-				newName = name.toLowerCase();
-			} else {
-				String firstChar = name.substring(0, 1);
-
-				String tmp = name.substring(1, name.length()).toLowerCase();
-				newName = firstChar.toUpperCase() + tmp;
-			}
-		} else {
-			for (int n = 0; n < names.length; n++) {
-				String tmp = names[n];
-				tmp = tmp.toLowerCase();
-
-				if (false == firstUpper && n == 0) {
-					newName = newName + tmp;
-					continue;
-				}
-				int len = tmp.length();
-				String firstChar = tmp.substring(0, 1);
-				newName = newName + firstChar.toUpperCase() + tmp.substring(1, len);
-			}
-		}
-
-		return newName;
-	}
 }

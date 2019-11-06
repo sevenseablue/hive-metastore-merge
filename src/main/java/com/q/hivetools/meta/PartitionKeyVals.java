@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -11,28 +10,28 @@ public class PartitionKeyVals {
     public void PartitionKeyVals() {
     }
 
-    public void setPartId(Long partId_) {
-        part_id = partId_;
-    }
-
     public Long getPartId() {
         return part_id;
     }
 
-    public void setPartKeyVal(String partKeyVal_) {
-        part_key_val = partKeyVal_;
+    public void setPartId(Long partId_) {
+        part_id = partId_;
     }
 
     public String getPartKeyVal() {
         return part_key_val;
     }
 
-    public void setIntegerIdx(Long integerIdx_) {
-        integer_idx = integerIdx_;
+    public void setPartKeyVal(String partKeyVal_) {
+        part_key_val = partKeyVal_;
     }
 
     public Long getIntegerIdx() {
         return integer_idx;
+    }
+
+    public void setIntegerIdx(Long integerIdx_) {
+        integer_idx = integerIdx_;
     }
 
 }

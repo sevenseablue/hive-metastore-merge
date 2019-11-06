@@ -14,17 +14,17 @@ import java.util.List;
  * Created by hzliuxun on 16/11/11.
  */
 public class Mammut {
-  private static final Logger logger = Logger.getLogger(Mammut.class.getName());
+    private static final Logger logger = Logger.getLogger(Mammut.class.getName());
 
-  public static void main(String[] args) {
-    try {
-      PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
-    } catch (IOException e) {
-      e.printStackTrace();
+    public static void main(String[] args) {
+        try {
+            PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MyBatisUtil.sourceName = "mammut";
+        MammutMapper mammutMapper = new MammutMapper("mammut");
+        List<PfHiveSite> list = mammutMapper.getPfHivesite();
     }
-
-    MyBatisUtil.sourceName = "mammut";
-    MammutMapper mammutMapper = new MammutMapper("mammut");
-    List<PfHiveSite> list = mammutMapper.getPfHivesite();
-  }
 }

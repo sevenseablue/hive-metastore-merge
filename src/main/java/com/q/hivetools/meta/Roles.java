@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -12,36 +11,36 @@ public class Roles {
     public void Roles() {
     }
 
-    public void setRoleId(Long roleId_) {
-        role_id = roleId_;
-    }
-
     public Long getRoleId() {
         return role_id;
     }
 
-    public void setCreateTime(Long createTime_) {
-        create_time = createTime_;
+    public void setRoleId(Long roleId_) {
+        role_id = roleId_;
     }
 
     public Long getCreateTime() {
         return create_time;
     }
 
-    public void setOwnerName(String ownerName_) {
-        owner_name = ownerName_;
+    public void setCreateTime(Long createTime_) {
+        create_time = createTime_;
     }
 
     public String getOwnerName() {
         return owner_name;
     }
 
-    public void setRoleName(String roleName_) {
-        role_name = roleName_;
+    public void setOwnerName(String ownerName_) {
+        owner_name = ownerName_;
     }
 
     public String getRoleName() {
         return role_name;
+    }
+
+    public void setRoleName(String roleName_) {
+        role_name = roleName_;
     }
 
 }

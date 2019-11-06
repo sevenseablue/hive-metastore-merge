@@ -20,8 +20,8 @@ import java.util.Scanner;
 /**
  * Created by hzliuxun on 16/10/26.
  */
-public class MetaDataMerge {
-    private static final Logger logger = Logger.getLogger(MetaDataMerge.class.getName());
+public class MetaDataMergeTbls {
+    private static final Logger logger = Logger.getLogger(MetaDataMergeTbls.class.getName());
 
     public static void main(String[] args) {
         try {
@@ -37,33 +37,14 @@ public class MetaDataMerge {
 
         logger.info("=====================================================");
         System.out.println("第一步:备份所有数据库");
-        System.out.println("hadoop519 > cd /home/hadoop/database-auto-backup/");
-        System.out.println("hadoop519 > ./autoBackupDB.sh");
-        System.out.println("第二步:清空 hadoop357 上 Mysql 数据库中的 exchange_db");
-        System.out.println("hadoop357 > mysql -uroot -proot -Dexchange_db;");
-        System.out.println("mysql > use exchange_db;");
-        System.out.println("mysql > drop database exchange_db;");
-        System.out.println("mysql > create database exchange_db;");
-        System.out.println("mysql > exit;");
+        System.out.println("第二步:清空数据库中的 exchange_db");
         System.out.println("第三步:使用用户提供的元数据 Mysql IP 和用户名密码，将数据库通过 mysqldump 出数据库(申请RDS权限)");
-        System.out.println("hadoop357 > mysqldump -hMysqlHostIP -uUserName -pPassword --single-transaction MysqlDatabaseName > MysqlDatabaseName.sql;");
         System.out.println("第四步:将 用户的 元数据导入 exchange_db");
-        System.out.println("hadoop357 > mysql -uroot -proot -Dexchange_db;");
-        System.out.println("mysql > use exchange_db;");
-        System.out.println("mysql > source ./MysqlDatabaseName.sql");
         System.out.println("第五步:检查是否存着和 DEST 数据库存着数据库重名,联系业务方将重名的数据库该名");
-        System.out.println("     :通过用户 Hive 表中的 HDFS 文件所属集群确定需要导入到哪个 hive 集群");
-        System.out.println("hadoop357 > cd /home/hadoop/hive-tools/");
-        System.out.println("hadoop357 > ./merge2hivecluster[1-5].sh");
-        System.out.println("hadoop357 > 如果有数据库重名，会打印出重名到数据库名称");
         System.out.println("第六步:在 exchange_db 中删除多余的 DB");
-        System.out.println("hadoop357 > cd /home/hadoop/hive-tools/");
-        System.out.println("hadoop357 > vi delMetaData.sh");
         System.out.println("修改脚本中的 DEL_DB（多个库之间用逗号分割,default必须删除）参数和 DEL_TBL（为空则删除所有表）");
-        System.out.println("hadoop357 > ./delMetaData.sh");
+        System.out.println("./delMetaData.sh");
         System.out.println("第七步:重新执行元数据合并脚本");
-        System.out.println("hadoop357 > cd /home/hadoop/hive-tools/");
-        System.out.println("hadoop357 > ./merge2hivecluster[1-5].sh");
         System.out.println("第八步:检查合并日志，通过hive进行测试是否导入成功");
         logger.info("-----------------------------------------------------");
         logger.info("将元数据 " + MyBatisUtil.sourceName + " 合并到 " + MyBatisUtil.destName);
@@ -81,17 +62,19 @@ public class MetaDataMerge {
         // no constraint
         tables.add("DBS");
         tables.add("CDS");
-        tables.add("COMPACTION_QUEUE");
-        tables.add("COMPLETED_TXN_COMPONENTS");
+//		tables.add("COMPACTION_QUEUE");
+//		tables.add("COMPLETED_TXN_COMPONENTS");
         tables.add("MASTER_KEYS");
-        tables.add("HIVE_LOCKS");
-        tables.add("NEXT_COMPACTION_QUEUE_ID");
-        tables.add("NEXT_LOCK_ID");
-        tables.add("NEXT_TXN_ID");
-        tables.add("NOTIFICATION_LOG");
-        tables.add("NOTIFICATION_SEQUENCE");
+//		tables.add("HIVE_LOCKS");
+//		tables.add("NEXT_COMPACTION_QUEUE_ID");
+//		tables.add("NEXT_LOCK_ID");
+//		tables.add("NEXT_TXN_ID");
+//		tables.add("NOTIFICATION_LOG");
+//		tables.add("NOTIFICATION_SEQUENCE");
         tables.add("NUCLEUS_TABLES");
-        tables.add("PARTITION_EVENTS");
+//		tables.add("PARTITION_EVENTS");
+//		tables.add("AUX_TABLE");
+//		tables.add("WRITE_SET");
         // have constraint
         tables.add("SERDES");
         tables.add("SERDE_PARAMS");
@@ -128,9 +111,7 @@ public class MetaDataMerge {
         tables.add("DATABASE_PARAMS");
         tables.add("DB_PRIVS");
         tables.add("KEY_CONSTRAINTS");
-        tables.add("AUX_TABLE");
         tables.add("COMPLETED_COMPACTIONS");
-        tables.add("WRITE_SET");
 
 		/* not merge
 		tables.add("ROLES");

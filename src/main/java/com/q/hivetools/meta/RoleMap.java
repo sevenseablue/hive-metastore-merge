@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -16,68 +15,68 @@ public class RoleMap {
     public void RoleMap() {
     }
 
-    public void setRoleGrantId(Long roleGrantId_) {
-        role_grant_id = roleGrantId_;
-    }
-
     public Long getRoleGrantId() {
         return role_grant_id;
     }
 
-    public void setAddTime(Long addTime_) {
-        add_time = addTime_;
+    public void setRoleGrantId(Long roleGrantId_) {
+        role_grant_id = roleGrantId_;
     }
 
     public Long getAddTime() {
         return add_time;
     }
 
-    public void setGrantOption(Integer grantOption_) {
-        grant_option = grantOption_;
+    public void setAddTime(Long addTime_) {
+        add_time = addTime_;
     }
 
     public Integer getGrantOption() {
         return grant_option;
     }
 
-    public void setGrantor(String grantor_) {
-        grantor = grantor_;
+    public void setGrantOption(Integer grantOption_) {
+        grant_option = grantOption_;
     }
 
     public String getGrantor() {
         return grantor;
     }
 
-    public void setGrantorType(String grantorType_) {
-        grantor_type = grantorType_;
+    public void setGrantor(String grantor_) {
+        grantor = grantor_;
     }
 
     public String getGrantorType() {
         return grantor_type;
     }
 
-    public void setPrincipalName(String principalName_) {
-        principal_name = principalName_;
+    public void setGrantorType(String grantorType_) {
+        grantor_type = grantorType_;
     }
 
     public String getPrincipalName() {
         return principal_name;
     }
 
-    public void setPrincipalType(String principalType_) {
-        principal_type = principalType_;
+    public void setPrincipalName(String principalName_) {
+        principal_name = principalName_;
     }
 
     public String getPrincipalType() {
         return principal_type;
     }
 
-    public void setRoleId(Long roleId_) {
-        role_id = roleId_;
+    public void setPrincipalType(String principalType_) {
+        principal_type = principalType_;
     }
 
     public Long getRoleId() {
         return role_id;
+    }
+
+    public void setRoleId(Long roleId_) {
+        role_id = roleId_;
     }
 
 }

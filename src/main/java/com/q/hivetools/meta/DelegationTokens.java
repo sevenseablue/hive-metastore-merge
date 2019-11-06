@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -10,20 +9,20 @@ public class DelegationTokens {
     public void DelegationTokens() {
     }
 
-    public void setTokenIdent(String tokenIdent_) {
-        token_ident = tokenIdent_;
-    }
-
     public String getTokenIdent() {
         return token_ident;
     }
 
-    public void setToken(String token_) {
-        token = token_;
+    public void setTokenIdent(String tokenIdent_) {
+        token_ident = tokenIdent_;
     }
 
     public String getToken() {
         return token;
+    }
+
+    public void setToken(String token_) {
+        token = token_;
     }
 
 }

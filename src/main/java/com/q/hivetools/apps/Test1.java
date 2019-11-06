@@ -1,7 +1,5 @@
 package com.q.hivetools.apps;
 
-import com.q.hivetools.mammut.PfHiveSite;
-import com.q.hivetools.mappers.MammutMapper;
 import com.q.hivetools.mappers.TestMapper;
 import com.q.hivetools.meta.Dbs;
 import com.q.hivetools.service.MyBatisUtil;
@@ -19,18 +17,18 @@ import java.util.List;
  * Created by hzliuxun on 16/11/11.
  */
 public class Test1 {
-  private static final Logger logger = Logger.getLogger(Test1.class.getName());
+    private static final Logger logger = Logger.getLogger(Test1.class.getName());
 
-  public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
 //    File file = Resources.getResourceAsFile("hive-tools.properties");
-    File file = new File("hive-tools.properties");
-    BufferedReader br = new BufferedReader(new FileReader(file));
-    System.out.println(br.readLine());
+        File file = new File("hive-tools.properties");
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        System.out.println(br.readLine());
 
-    PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
+        PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
 
-    MyBatisUtil.sourceName = "localpg";
-    TestMapper testMapper = new TestMapper("localpg");
-    List<Dbs> list = testMapper.getDbs();
-  }
+        MyBatisUtil.sourceName = "localpg";
+        TestMapper testMapper = new TestMapper("localpg");
+        List<Dbs> list = testMapper.getDbs();
+    }
 }

@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -17,76 +16,76 @@ public class TblPrivs {
     public void TblPrivs() {
     }
 
-    public void setTblGrantId(Long tblGrantId_) {
-        tbl_grant_id = tblGrantId_;
-    }
-
     public Long getTblGrantId() {
         return tbl_grant_id;
     }
 
-    public void setCreateTime(Long createTime_) {
-        create_time = createTime_;
+    public void setTblGrantId(Long tblGrantId_) {
+        tbl_grant_id = tblGrantId_;
     }
 
     public Long getCreateTime() {
         return create_time;
     }
 
-    public void setGrantOption(Integer grantOption_) {
-        grant_option = grantOption_;
+    public void setCreateTime(Long createTime_) {
+        create_time = createTime_;
     }
 
     public Integer getGrantOption() {
         return grant_option;
     }
 
-    public void setGrantor(String grantor_) {
-        grantor = grantor_;
+    public void setGrantOption(Integer grantOption_) {
+        grant_option = grantOption_;
     }
 
     public String getGrantor() {
         return grantor;
     }
 
-    public void setGrantorType(String grantorType_) {
-        grantor_type = grantorType_;
+    public void setGrantor(String grantor_) {
+        grantor = grantor_;
     }
 
     public String getGrantorType() {
         return grantor_type;
     }
 
-    public void setPrincipalName(String principalName_) {
-        principal_name = principalName_;
+    public void setGrantorType(String grantorType_) {
+        grantor_type = grantorType_;
     }
 
     public String getPrincipalName() {
         return principal_name;
     }
 
-    public void setPrincipalType(String principalType_) {
-        principal_type = principalType_;
+    public void setPrincipalName(String principalName_) {
+        principal_name = principalName_;
     }
 
     public String getPrincipalType() {
         return principal_type;
     }
 
-    public void setTblPriv(String tblPriv_) {
-        tbl_priv = tblPriv_;
+    public void setPrincipalType(String principalType_) {
+        principal_type = principalType_;
     }
 
     public String getTblPriv() {
         return tbl_priv;
     }
 
-    public void setTblId(Long tblId_) {
-        tbl_id = tblId_;
+    public void setTblPriv(String tblPriv_) {
+        tbl_priv = tblPriv_;
     }
 
     public Long getTblId() {
         return tbl_id;
+    }
+
+    public void setTblId(Long tblId_) {
+        tbl_id = tblId_;
     }
 
 }

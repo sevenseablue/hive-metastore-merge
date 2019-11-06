@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -11,28 +10,28 @@ public class PartitionParams {
     public void PartitionParams() {
     }
 
-    public void setPartId(Long partId_) {
-        part_id = partId_;
-    }
-
     public Long getPartId() {
         return part_id;
     }
 
-    public void setParamKey(String paramKey_) {
-        param_key = paramKey_;
+    public void setPartId(Long partId_) {
+        part_id = partId_;
     }
 
     public String getParamKey() {
         return param_key;
     }
 
-    public void setParamValue(String paramValue_) {
-        param_value = paramValue_;
+    public void setParamKey(String paramKey_) {
+        param_key = paramKey_;
     }
 
     public String getParamValue() {
         return param_value;
+    }
+
+    public void setParamValue(String paramValue_) {
+        param_value = paramValue_;
     }
 
 }

@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -14,52 +13,52 @@ public class NucleusTables {
     public void NucleusTables() {
     }
 
-    public void setClassName(String className_) {
-        class_name = className_;
-    }
-
     public String getClassName() {
         return class_name;
     }
 
-    public void setTableName(String tableName_) {
-        table_name = tableName_;
+    public void setClassName(String className_) {
+        class_name = className_;
     }
 
     public String getTableName() {
         return table_name;
     }
 
-    public void setType(String type_) {
-        type = type_;
+    public void setTableName(String tableName_) {
+        table_name = tableName_;
     }
 
     public String getType() {
         return type;
     }
 
-    public void setOwner(String owner_) {
-        owner = owner_;
+    public void setType(String type_) {
+        type = type_;
     }
 
     public String getOwner() {
         return owner;
     }
 
-    public void setVersion(String version_) {
-        version = version_;
+    public void setOwner(String owner_) {
+        owner = owner_;
     }
 
     public String getVersion() {
         return version;
     }
 
-    public void setInterfaceName(String interfaceName_) {
-        interface_name = interfaceName_;
+    public void setVersion(String version_) {
+        version = version_;
     }
 
     public String getInterfaceName() {
         return interface_name;
+    }
+
+    public void setInterfaceName(String interfaceName_) {
+        interface_name = interfaceName_;
     }
 
 }

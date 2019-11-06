@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -11,28 +10,28 @@ public class SdParams {
     public void SdParams() {
     }
 
-    public void setSdId(Long sdId_) {
-        sd_id = sdId_;
-    }
-
     public Long getSdId() {
         return sd_id;
     }
 
-    public void setParamKey(String paramKey_) {
-        param_key = paramKey_;
+    public void setSdId(Long sdId_) {
+        sd_id = sdId_;
     }
 
     public String getParamKey() {
         return param_key;
     }
 
-    public void setParamValue(String paramValue_) {
-        param_value = paramValue_;
+    public void setParamKey(String paramKey_) {
+        param_key = paramKey_;
     }
 
     public String getParamValue() {
         return param_value;
+    }
+
+    public void setParamValue(String paramValue_) {
+        param_value = paramValue_;
     }
 
 }

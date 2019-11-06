@@ -1,4 +1,3 @@
-
 package com.q.hivetools.meta;
 
 
@@ -14,52 +13,52 @@ public class Dbs {
     public void Dbs() {
     }
 
-    public void setDbId(Long dbId_) {
-        db_id = dbId_;
-    }
-
     public Long getDbId() {
         return db_id;
     }
 
-    public void setDesc(String desc_) {
-        desc = desc_;
+    public void setDbId(Long dbId_) {
+        db_id = dbId_;
     }
 
     public String getDesc() {
         return desc;
     }
 
-    public void setDbLocationUri(String dbLocationUri_) {
-        db_location_uri = dbLocationUri_;
+    public void setDesc(String desc_) {
+        desc = desc_;
     }
 
     public String getDbLocationUri() {
         return db_location_uri;
     }
 
-    public void setName(String name_) {
-        name = name_;
+    public void setDbLocationUri(String dbLocationUri_) {
+        db_location_uri = dbLocationUri_;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setOwnerName(String ownerName_) {
-        owner_name = ownerName_;
+    public void setName(String name_) {
+        name = name_;
     }
 
     public String getOwnerName() {
         return owner_name;
     }
 
-    public void setOwnerType(String ownerType_) {
-        owner_type = ownerType_;
+    public void setOwnerName(String ownerName_) {
+        owner_name = ownerName_;
     }
 
     public String getOwnerType() {
         return owner_type;
+    }
+
+    public void setOwnerType(String ownerType_) {
+        owner_type = ownerType_;
     }
 
     @Override

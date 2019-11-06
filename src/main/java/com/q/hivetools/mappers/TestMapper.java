@@ -1,11 +1,10 @@
 package com.q.hivetools.mappers;
 
-import com.q.hivetools.service.MyBatisUtil;
 import com.q.hivetools.meta.Dbs;
+import com.q.hivetools.service.MyBatisUtil;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.log4j.Logger;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class TestMapper {
@@ -32,7 +31,7 @@ public class TestMapper {
             sqlSession.close();
         }
 
-        for(Dbs dbs: list){
+        for (Dbs dbs : list) {
             System.out.println(dbs);
         }
 
