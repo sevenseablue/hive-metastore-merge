@@ -88,4 +88,18 @@ public class DbPrivs {
         db_priv = dbPriv_;
     }
 
+    @Override
+    public String toString() {
+        return "DbPrivs{" +
+                "db_grant_id=" + db_grant_id +
+                ", create_time=" + create_time +
+                ", db_id=" + db_id +
+                ", grant_option=" + grant_option +
+                ", grantor='" + grantor + '\'' +
+                ", grantor_type='" + grantor_type + '\'' +
+                ", principal_name='" + principal_name + '\'' +
+                ", principal_type='" + principal_type + '\'' +
+                ", db_priv='" + db_priv + '\'' +
+                '}';
+    }
 }

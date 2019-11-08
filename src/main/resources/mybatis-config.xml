@@ -17,6 +17,8 @@
     <mappers>
         <mapper resource='MetaDataMapper.xml'/>
         <mapper resource='MetaDataMapperPg.xml'/>
+        <mapper resource='MetaDataSelectMapper.xml'/>
+        <mapper resource='MetaDataSelectMapperPg.xml'/>
         <mapper resource='TestMapper.xml'/>
         <mapper resource='MammutMapper.xml'/>
     </mappers>

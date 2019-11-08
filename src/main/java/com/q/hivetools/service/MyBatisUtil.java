@@ -14,6 +14,8 @@ public class MyBatisUtil {
     public static String sourceName;
     public static String destName;
     public static String onlneName;
+    public static String db;
+    public static String tb;
     public static Properties allProps = new Properties();
     private static SqlSessionFactory soucrcFactory = null;
     private static SqlSessionFactory destFactory = null;
@@ -46,6 +48,7 @@ public class MyBatisUtil {
     }
 
     public static boolean isMysql(String sourceName) {
+        System.out.println(allProps);
         return allProps.getProperty(sourceName + ".jdbc.driverClassName").equals("com.mysql.jdbc.Driver");
     }
 

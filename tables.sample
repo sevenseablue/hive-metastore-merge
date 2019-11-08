@@ -1,0 +1,45 @@
+<graphml xmlns='http://graphml.graphdrawing.org/xmlns'>
+    <key id='type'    for='node' attr.name='type'    attr.type='string'></key>
+    <key id='name'    for='node' attr.name='name'    attr.type='string'></key>
+    <key id='cols'    for='node' attr.name='cols'    attr.type='string'></key>
+    <key id='visited'    for='node' attr.name='visited'    attr.type='string'></key>
+    <key id='rr'    for='edge' attr.name='rr'    attr.type='string'></key>
+    <key id='labelV'  for='node' attr.name='labelV'  attr.type='string'></key>
+    <key id='labelE'  for='edge' attr.name='labelE'  attr.type='string'></key>
+    <graph id='db' edgedefault='directed'>
+    <node id='0'>
+        <data key='labelV'>table</data>
+        <data key='type'>table</data>
+        <data key='name'>t1</data>
+        <data key='visited'>n</data>
+        <data key='cols'>c1,c2,c3</data>
+    </node>
+    <node id='1'>
+        <data key='labelV'>table</data>
+        <data key='type'>table</data>
+        <data key='name'>t2</data>
+        <data key='visited'>n</data>
+        <data key='cols'>c1,c2,c3</data>
+    </node>
+    <node id='2'>
+        <data key='labelV'>table</data>
+        <data key='type'>table</data>
+        <data key='name'>t3</data>
+        <data key='visited'>n</data>
+        <data key='cols'>c1,c2,c3</data>
+    </node>
+  <edge id='3' source='1' target='0'>
+    <data key='rr'>c2,c1</data>
+  </edge>
+  <edge id='4' source='2' target='0'>
+    <data key='rr'>c2,c1</data>
+  </edge>
+  <edge id='5' source='2' target='1'>
+      <data key='rr'>c3,c1</data>
+    </edge>
+    <edge id='6' source='1' target='0'>
+      <data key='rr'>c3,c1</data>
+    </edge>
+</graph>
+</graphml>
+

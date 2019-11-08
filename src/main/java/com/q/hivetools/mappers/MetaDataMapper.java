@@ -90,6 +90,30 @@ public class MetaDataMapper {
         return list;
     }
 
+    public List<Object> getTableRecordsCondition(String tabName, Map<String, Object> params) {
+        List<Object> list = null;
+        SqlSession sqlSession = MyBatisUtil.getSqlSessionFactory(this.sourceName).openSession();
+        try {
+            tabName = SchemaUtils.formatTableColumnName(tabName, true);
+            String statement = this.mapper + ".get" + tabName + "RecordsCondition";
+
+            if (null == params) {
+                // init
+                params = new HashMap<String, Object>();
+                params.put("dbname", MyBatisUtil.db);
+                params.put("tbname", "%");
+            }
+
+            list = sqlSession.selectList(statement, params);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        } finally {
+            sqlSession.close();
+        }
+        return list;
+    }
+
     public List<Object> getTableRecordsSess(String tabName, Map<String, Object> params, SqlSession sqlSession) {
         List<Object> list = null;
         try {

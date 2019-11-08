@@ -43,11 +43,13 @@
     <junit.version>3.8.1</junit.version>
     <hive.version>2.3.6</hive.version>
     <hadoop.version>2.7.7</hadoop.version>
+    <tinkerpop.version>3.4.4</tinkerpop.version>
 
     <PermGen>64m</PermGen>
     <MaxPermGen>512m</MaxPermGen>
     <CodeCacheSize>512m</CodeCacheSize>
   </properties>
+
   <repositories>
     <repository>
       <id>apache.snapshots.https</id>
@@ -185,6 +187,21 @@
       <groupId>edu.princeton.cs</groupId>
       <artifactId>algs4</artifactId>
       <version>1.0.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tinkerpop</groupId>
+      <artifactId>gremlin-core</artifactId>
+      <version>${tinkerpop.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tinkerpop</groupId>
+      <artifactId>gremlin-driver</artifactId>
+      <version>${tinkerpop.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tinkerpop</groupId>
+      <artifactId>tinkergraph-gremlin</artifactId>
+      <version>${tinkerpop.version}</version>
     </dependency>
   </dependencies>
 

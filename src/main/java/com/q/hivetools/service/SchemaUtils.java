@@ -75,6 +75,7 @@ public class SchemaUtils {
     }
 
     public static void main(String[] args) {
-        topological("tables.fk.txt", ",");
+//        topological("tables.fk.txt", ",");
+        System.out.println(formatTableColumnName("DBS", true));
     }
 }

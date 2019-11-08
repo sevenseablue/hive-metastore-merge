@@ -4,7 +4,7 @@
 
 <mapper namespace='com.q.hivetools.mappers.TestMapper'>
     <select id='getDbs' parameterType="com.q.hivetools.meta.Dbs" resultType='com.q.hivetools.meta.Dbs'>
-        SELECT * FROM "DBS" WHERE 1=1 AND "DB_ID" = ${db_id}
+        SELECT * FROM DBS WHERE 1=1 AND DB_ID = ${db_id}
     </select>
 
 

@@ -1,6 +1,7 @@
 package com.q.hivetools.apps;
 
 import com.q.hivetools.mappers.TestMapper;
+import com.q.hivetools.meta.DbPrivs;
 import com.q.hivetools.meta.Dbs;
 import com.q.hivetools.service.MyBatisUtil;
 import org.apache.ibatis.io.Resources;
@@ -27,8 +28,8 @@ public class Test1 {
 
         PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
 
-        MyBatisUtil.sourceName = "localpg";
-        TestMapper testMapper = new TestMapper("localpg");
-        List<Dbs> list = testMapper.getDbs();
+        MyBatisUtil.sourceName = "local";
+        TestMapper testMapper = new TestMapper("local");
+        List<DbPrivs> list = testMapper.getDbPrivsCondition();
     }
 }

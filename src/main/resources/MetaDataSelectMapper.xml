@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.q.hivetools.mappers.MetaDataMapper">
+    <select id="getDbsRecordsCondition" parameterType="java.util.Map" resultType="com.q.hivetools.meta.Dbs">
+select * from DBS where NAME=#{dbname}
+</select>
+    <select id="getTblsRecordsCondition" parameterType="java.util.Map" resultType="com.q.hivetools.meta.Tbls">
+        select * from TBLS
+        <where>
+            <if test="DbsList!=null and DbsList.size!=0">
+                DB_ID in
+                <foreach close=")" collection="DbsList" index="index" item="item" open="(" separator=",">
+                    #{item.db_id}
+                </foreach>
+            </if>
+            <if test="TbnameList!=null and TbnameList.size!=0">
+                and TBL_NAME in
+                <foreach close=")" collection="TbnameList" index="index" item="item" open="(" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getPartitionsRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.Partitions">
+        select * from PARTITIONS
+        <where>
+            <if test="TblsList!=null and TblsList.size!=0">
+                TBL_ID in
+                <foreach close=")" collection="TblsList" index="index" item="item" open="(" separator=",">
+                    #{item.tbl_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getSdsRecordsCondition" parameterType="java.util.Map" resultType="com.q.hivetools.meta.Sds">
+        select * from SDS
+        <where>
+            <if test="TblsList!=null and TblsList.size!=0">
+                SD_ID in
+                <foreach close=")" collection="TblsList" index="index" item="item" open="(" separator=",">
+                    #{item.sd_id}
+                </foreach>
+            </if>
+            <if test="PartitionsList!=null and PartitionsList.size!=0">
+                or SD_ID in
+                <foreach close=")" collection="PartitionsList" index="index" item="item" open="(" separator=",">
+                    #{item.sd_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getBucketingColsRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.BucketingCols">
+        select * from BUCKETING_COLS
+        <where>
+            <if test="SdsList!=null and SdsList.size!=0">
+                SD_ID in
+                <foreach close=")" collection="SdsList" index="index" item="item" open="(" separator=",">
+                    #{item.sd_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getCdsRecordsCondition" parameterType="java.util.Map" resultType="com.q.hivetools.meta.Cds">
+        select * from CDS
+        <where>
+            <if test="SdsList!=null and SdsList.size!=0">
+                CD_ID in
+                <foreach close=")" collection="SdsList" index="index" item="item" open="(" separator=",">
+                    #{item.cd_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getSerdesRecordsCondition" parameterType="java.util.Map" resultType="com.q.hivetools.meta.Serdes">
+        select * from SERDES
+        <where>
+            <if test="SdsList!=null and SdsList.size!=0">
+                SERDE_ID in
+                <foreach close=")" collection="SdsList" index="index" item="item" open="(" separator=",">
+                    #{item.serde_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getColumnsV2RecordsCondition" parameterType="java.util.Map" resultType="com.q.hivetools.meta.ColumnsV2">
+        select * from COLUMNS_V2
+        <where>
+            <if test="CdsList!=null and CdsList.size!=0">
+                CD_ID in
+                <foreach close=")" collection="CdsList" index="index" item="item" open="(" separator=",">
+                    #{item.cd_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getDatabaseParamsRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.DatabaseParams">
+        select * from DATABASE_PARAMS
+        <where>
+            <if test="DbsList!=null and DbsList.size!=0">
+                DB_ID in
+                <foreach close=")" collection="DbsList" index="index" item="item" open="(" separator=",">
+                    #{item.db_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getDbPrivsRecordsCondition" parameterType="java.util.Map" resultType="com.q.hivetools.meta.DbPrivs">
+        select * from DB_PRIVS
+        <where>
+            <if test="DbsList!=null and DbsList.size!=0">
+                DB_ID in
+                <foreach close=")" collection="DbsList" index="index" item="item" open="(" separator=",">
+                    #{item.db_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getIdxsRecordsCondition" parameterType="java.util.Map" resultType="com.q.hivetools.meta.Idxs">
+        select * from IDXS
+        <where>
+            <if test="TblsList!=null and TblsList.size!=0">
+                ORIG_TBL_ID in
+                <foreach close=")" collection="TblsList" index="index" item="item" open="(" separator=",">
+                    #{item.tbl_id}
+                </foreach>
+            </if>
+            <if test="SdsList!=null and SdsList.size!=0">
+                and SD_ID in
+                <foreach close=")" collection="SdsList" index="index" item="item" open="(" separator=",">
+                    #{item.sd_id}
+                </foreach>
+            </if>
+            <if test="TblsList!=null and TblsList.size!=0">
+                and INDEX_TBL_ID in
+                <foreach close=")" collection="TblsList" index="index" item="item" open="(" separator=",">
+                    #{item.tbl_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getIndexParamsRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.IndexParams">
+        select * from INDEX_PARAMS
+        <where>
+            <if test="IdxsList!=null and IdxsList.size!=0">
+                INDEX_ID in
+                <foreach close=")" collection="IdxsList" index="index" item="item" open="(" separator=",">
+                    #{item.index_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getPartitionKeysRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.PartitionKeys">
+        select * from PARTITION_KEYS
+        <where>
+            <if test="TblsList!=null and TblsList.size!=0">
+                TBL_ID in
+                <foreach close=")" collection="TblsList" index="index" item="item" open="(" separator=",">
+                    #{item.tbl_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getPartitionKeyValsRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.PartitionKeyVals">
+        select * from PARTITION_KEY_VALS
+        <where>
+            <if test="PartitionsList!=null and PartitionsList.size!=0">
+                PART_ID in
+                <foreach close=")" collection="PartitionsList" index="index" item="item" open="(" separator=",">
+                    #{item.part_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getPartitionParamsRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.PartitionParams">
+        select * from PARTITION_PARAMS
+        <where>
+            <if test="PartitionsList!=null and PartitionsList.size!=0">
+                PART_ID in
+                <foreach close=")" collection="PartitionsList" index="index" item="item" open="(" separator=",">
+                    #{item.part_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getPartColPrivsRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.PartColPrivs">
+        select * from PART_COL_PRIVS
+        <where>
+            <if test="PartitionsList!=null and PartitionsList.size!=0">
+                PART_ID in
+                <foreach close=")" collection="PartitionsList" index="index" item="item" open="(" separator=",">
+                    #{item.part_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getPartPrivsRecordsCondition" parameterType="java.util.Map" resultType="com.q.hivetools.meta.PartPrivs">
+        select * from PART_PRIVS
+        <where>
+            <if test="PartitionsList!=null and PartitionsList.size!=0">
+                PART_ID in
+                <foreach close=")" collection="PartitionsList" index="index" item="item" open="(" separator=",">
+                    #{item.part_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getSdParamsRecordsCondition" parameterType="java.util.Map" resultType="com.q.hivetools.meta.SdParams">
+        select * from SD_PARAMS
+        <where>
+            <if test="SdsList!=null and SdsList.size!=0">
+                SD_ID in
+                <foreach close=")" collection="SdsList" index="index" item="item" open="(" separator=",">
+                    #{item.sd_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getSerdeParamsRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.SerdeParams">
+        select * from SERDE_PARAMS
+        <where>
+            <if test="SerdesList!=null and SerdesList.size!=0">
+                SERDE_ID in
+                <foreach close=")" collection="SerdesList" index="index" item="item" open="(" separator=",">
+                    #{item.serde_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getSkewedColNamesRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.SkewedColNames">
+        select * from SKEWED_COL_NAMES
+        <where>
+            <if test="SdsList!=null and SdsList.size!=0">
+                SD_ID in
+                <foreach close=")" collection="SdsList" index="index" item="item" open="(" separator=",">
+                    #{item.sd_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getSkewedColValueLocMapRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.SkewedColValueLocMap">
+        select * from SKEWED_COL_VALUE_LOC_MAP
+        <where>
+            <if test="SdsList!=null and SdsList.size!=0">
+                SD_ID in
+                <foreach close=")" collection="SdsList" index="index" item="item" open="(" separator=",">
+                    #{item.sd_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getSkewedStringListRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.SkewedStringList">
+        select * from SKEWED_STRING_LIST
+        <where>
+            <if test="SkewedColValueLocMapList!=null and SkewedColValueLocMapList.size!=0">
+                STRING_LIST_ID in
+                <foreach close=")" collection="SkewedColValueLocMapList" index="index" item="item" open="("
+                         separator=",">
+                    #{item.string_list_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getSkewedStringListValuesRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.SkewedStringListValues">
+        select * from SKEWED_STRING_LIST_VALUES
+        <where>
+            <if test="SkewedStringListList!=null and SkewedStringListList.size!=0">
+                STRING_LIST_ID in
+                <foreach close=")" collection="SkewedStringListList" index="index" item="item" open="(" separator=",">
+                    #{item.string_list_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getSkewedValuesRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.SkewedValues">
+        select * from SKEWED_VALUES
+        <where>
+            <if test="SdsList!=null and SdsList.size!=0">
+                SD_ID_OID in
+                <foreach close=")" collection="SdsList" index="index" item="item" open="(" separator=",">
+                    #{item.sd_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getSortColsRecordsCondition" parameterType="java.util.Map" resultType="com.q.hivetools.meta.SortCols">
+        select * from SORT_COLS
+        <where>
+            <if test="SdsList!=null and SdsList.size!=0">
+                SD_ID in
+                <foreach close=")" collection="SdsList" index="index" item="item" open="(" separator=",">
+                    #{item.sd_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getTableParamsRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.TableParams">
+        select * from TABLE_PARAMS
+        <where>
+            <if test="TblsList!=null and TblsList.size!=0">
+                TBL_ID in
+                <foreach close=")" collection="TblsList" index="index" item="item" open="(" separator=",">
+                    #{item.tbl_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getTblColPrivsRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.TblColPrivs">
+        select * from TBL_COL_PRIVS
+        <where>
+            <if test="TblsList!=null and TblsList.size!=0">
+                TBL_ID in
+                <foreach close=")" collection="TblsList" index="index" item="item" open="(" separator=",">
+                    #{item.tbl_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getTblPrivsRecordsCondition" parameterType="java.util.Map" resultType="com.q.hivetools.meta.TblPrivs">
+        select * from TBL_PRIVS
+        <where>
+            <if test="TblsList!=null and TblsList.size!=0">
+                TBL_ID in
+                <foreach close=")" collection="TblsList" index="index" item="item" open="(" separator=",">
+                    #{item.tbl_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getTabColStatsRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.TabColStats">
+        select * from TAB_COL_STATS
+        <where>
+            <if test="TblsList!=null and TblsList.size!=0">
+                TBL_ID in
+                <foreach close=")" collection="TblsList" index="index" item="item" open="(" separator=",">
+                    #{item.tbl_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getPartColStatsRecordsCondition" parameterType="java.util.Map"
+            resultType="com.q.hivetools.meta.PartColStats">
+        select * from PART_COL_STATS
+        <where>
+            <if test="PartitionsList!=null and PartitionsList.size!=0">
+                PART_ID in
+                <foreach close=")" collection="PartitionsList" index="index" item="item" open="(" separator=",">
+                    #{item.part_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getFuncsRecordsCondition" parameterType="java.util.Map" resultType="com.q.hivetools.meta.Funcs">
+        select * from FUNCS
+        <where>
+            <if test="DbsList!=null and DbsList.size!=0">
+                DB_ID in
+                <foreach close=")" collection="DbsList" index="index" item="item" open="(" separator=",">
+                    #{item.db_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getFuncRuRecordsCondition" parameterType="java.util.Map" resultType="com.q.hivetools.meta.FuncRu">
+        select * from FUNC_RU
+        <where>
+            <if test="FuncsList!=null and FuncsList.size!=0">
+                FUNC_ID in
+                <foreach close=")" collection="FuncsList" index="index" item="item" open="(" separator=",">
+                    #{item.func_id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getVersionRecordsCondition" parameterType="java.util.Map" resultType="com.q.hivetools.meta.Version">
+select * from VERSION 
+</select>
+</mapper>
