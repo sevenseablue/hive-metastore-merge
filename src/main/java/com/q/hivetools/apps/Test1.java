@@ -26,7 +26,7 @@ public class Test1 {
         BufferedReader br = new BufferedReader(new FileReader(file));
         System.out.println(br.readLine());
 
-        PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
+        PropertyConfigurator.configure(Test1.class.getResourceAsStream("/log4j.properties"));
 
         MyBatisUtil.sourceName = "local";
         TestMapper testMapper = new TestMapper("local");

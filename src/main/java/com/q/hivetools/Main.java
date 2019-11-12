@@ -22,11 +22,7 @@ public class Main {
     private static final Logger logger = Logger.getLogger(Main.class.getName());
 
     public static void main(String[] args) {
-        try {
-            PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        PropertyConfigurator.configure(Main.class.getResourceAsStream("/log4j.properties"));
 
 //    test(args);
 //    cliCommond(args);

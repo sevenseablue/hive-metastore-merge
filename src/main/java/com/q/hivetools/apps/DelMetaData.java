@@ -24,11 +24,7 @@ public class DelMetaData {
     private static Set<String> del_tbname_set = new HashSet<>();
 
     public static void main(String[] args) {
-        try {
-            PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        PropertyConfigurator.configure(DelMetaData.class.getResourceAsStream("/log4j.properties"));
 
         cliCommond(args);
 

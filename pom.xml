@@ -209,10 +209,10 @@
     <resources>
       <resource>
         <excludes>
-<!--          <exclude>*.sql</exclude>-->
+          <exclude>*.sql</exclude>
           <exclude>*.json</exclude>
           <exclude>hive-tools.sh</exclude>
-<!--          <exclude>hive-tools.properties</exclude>-->
+          <exclude>hive-tools.properties</exclude>
 <!--          <exclude>log4j.properties</exclude>-->
         </excludes>
         <directory>src/main/resources</directory>
@@ -312,6 +312,7 @@
                     <include>hive-tools.sh</include>
                     <include>hive-tools.properties</include>
                     <include>log4j.properties</include>
+                    <include>SELECTTABLESMan.txt</include>
                   </includes>
                 </resource>
               </resources>

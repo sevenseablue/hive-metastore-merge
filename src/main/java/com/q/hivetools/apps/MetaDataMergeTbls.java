@@ -14,8 +14,10 @@ import org.apache.ibatis.io.Resources;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,12 +28,7 @@ public class MetaDataMergeTbls {
     private static final Logger logger = Logger.getLogger(MetaDataMergeTbls.class.getName());
 
     public static void main(String[] args) throws IOException {
-        try {
-            PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        PropertyConfigurator.configure(MetaDataMergeTbls.class.getResourceAsStream("/log4j.properties"));
         cliCommond(args);
 
 //		MyBatisUtil.sourceName = "hive_haitao";
@@ -61,12 +58,13 @@ public class MetaDataMergeTbls {
         HashMap<String, Object> mapPlusId = new HashMap<String, Object>();
         HashMap<String, Object> pagingProc = new HashMap<String, Object>();
 
-        File selFile = Resources.getResourceAsFile("SELECTTABLESMan.txt");
-        File insFile = Resources.getResourceAsFile("INSERTMAN.txt");
-        File tabColFile = Resources.getResourceAsFile("SELECTTABLESCols.txt");
-        List<String> selTables = FileUtils.readLines(selFile).stream().map(x->x.split(":")[0]).collect(Collectors.toList());
-        List<String> insTables = FileUtils.readLines(insFile).stream().map(x->x.split(":")[0]).collect(Collectors.toList());
-        List<String> tabCols = FileUtils.readLines(tabColFile).stream().collect(Collectors.toList());
+        File selFile = new File(MetaDataMergeTbls.class.getResource("/SELECTTABLESMan.txt").getPath());
+//        Resources.getResourceAsFile("SELECTTABLESMan.txt");
+
+        List<String> selTables = new BufferedReader(new InputStreamReader(MetaDataMergeTbls.class.getResourceAsStream("/SELECTTABLESMan.txt"))).lines().map(x->x.split(":")[0]).collect(Collectors.toList());
+        List<String> insTables = new BufferedReader(new InputStreamReader(MetaDataMergeTbls.class.getResourceAsStream("/INSERTMAN.txt"))).lines().map(x->x.split(":")[0]).collect(Collectors.toList());
+        List<String> tabCols = new BufferedReader(new InputStreamReader(MetaDataMergeTbls.class.getResourceAsStream("/SELECTTABLESCols.txt"))).lines().collect(Collectors.toList());
+        //        FileUtils.readLines(insFile).stream().map(x->x.split(":")[0]).collect(Collectors.toList());
 
 		/* not merge
 		tables.add("ROLES");

@@ -24,11 +24,7 @@ public class MetaDataMerge {
     private static final Logger logger = Logger.getLogger(MetaDataMerge.class.getName());
 
     public static void main(String[] args) {
-        try {
-            PropertyConfigurator.configure(Resources.getResourceAsStream("log4j.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        PropertyConfigurator.configure(MetaDataMerge.class.getResourceAsStream("/log4j.properties"));
 
         cliCommond(args);
 
