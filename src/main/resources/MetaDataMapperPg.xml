@@ -753,7 +753,7 @@
     </insert>
     <update id="updateSequenceTable">
         UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("CD_ID") + 5 FROM "COLUMNS_V2") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MColumnDescriptor';
-        update SEQUENCE_TABLE set NEXT_VAL=(select max(DB_GRANT_ID)+5 from DB_PRIVS) where SEQUENCE_NAME='org.apache.hadoop.hive.metastore.model.MDBPrivilege';
+        update "SEQUENCE_TABLE" set "NEXT_VAL"=(select max("DB_GRANT_ID")+5 from "DB_PRIVS") where "SEQUENCE_NAME"='org.apache.hadoop.hive.metastore.model.MDBPrivilege';
         UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("DB_ID") + 5 FROM "DBS") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MDatabase';
         UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("FUNC_ID") + 5 FROM "FUNCS") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MFunction';
     <!--'org.apache.hadoop.hive.metastore.model.MGlobalPrivilege'-->
@@ -764,7 +764,7 @@
         UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("SD_ID") + 5 FROM "SDS") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MStorageDescriptor';
         UPDATE "SEQUENCE_TABLE" SET "NEXT_VAL" = (SELECT max("TBL_ID") + 5 FROM "TBLS") WHERE "SEQUENCE_NAME" = 'org.apache.hadoop.hive.metastore.model.MTable';
     <!--'org.apache.hadoop.hive.metastore.model.MTablePrivilege'-->
-        update SEQUENCE_TABLE set NEXT_VAL=(select max(TBL_GRANT_ID)+5 from TBL_PRIVS) where SEQUENCE_NAME='org.apache.hadoop.hive.metastore.model.MTablePrivilege';
+        update "SEQUENCE_TABLE" set "NEXT_VAL"=(select max("TBL_GRANT_ID")+5 from "TBL_PRIVS") where "SEQUENCE_NAME"='org.apache.hadoop.hive.metastore.model.MTablePrivilege';
         <!--'org.apache.hadoop.hive.metastore.model.MVersionTable'-->
     </update>
     <delete id="rollbackSequenceTable" parameterType="java.util.Map">
