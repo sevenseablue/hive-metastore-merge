@@ -1,8 +1,10 @@
 
 ## hive-metastore-merge
 fork自[网易hive-tools](https://github.com/NetEase/hive-tools)
-- 原版支持hive1.2 mysql metastore合并
-- 现版支持hive2.3 mysql postgres metastore合并及之间合并
+- 原版支持hive1.2 mysql metastore合并, 全库插入
+- 现版支持hive2.3 mysql postgres metastore合并及之间合并, 可以按库表选择插入到目标数据库
+
+
 
 
 ##
