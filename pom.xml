@@ -35,7 +35,7 @@
     <jsqlparser.version>0.8.0</jsqlparser.version>
     <derby.version>10.12.1.1</derby.version>
     <derbyclient.version>10.12.1.1</derbyclient.version>
-    <mybatis.version>3.2.8</mybatis.version>
+    <mybatis.version>3.5.6</mybatis.version>
     <codemodel.version>2.6</codemodel.version>
     <druid.version>1.1.20</druid.version>
     <mysql-connector-java.version>5.1.48</mysql-connector-java.version>
